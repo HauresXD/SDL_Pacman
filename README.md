@@ -2,7 +2,7 @@
 
 Pacman game made in C with SDL2.
 
-compile by:
+compile in dir: `build` by:
 ```bash
-gcc main.c -o main -lSDL2
+make
 ```
