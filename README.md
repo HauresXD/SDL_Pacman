@@ -2,7 +2,7 @@
 
 Pacman game made in C with SDL2.
 
-Commands:<br>
+### Commands:<br>
 compile in dir: [build](build/) by:
 ```bash
 make
