@@ -129,6 +129,30 @@ main/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/build
 .PHONY : main/fast
 
+array.o: array.c.o
+.PHONY : array.o
+
+# target to build an object file
+array.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/array.c.o
+.PHONY : array.c.o
+
+array.i: array.c.i
+.PHONY : array.i
+
+# target to preprocess a source file
+array.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/array.c.i
+.PHONY : array.c.i
+
+array.s: array.c.s
+.PHONY : array.s
+
+# target to generate assembly for a file
+array.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/array.c.s
+.PHONY : array.c.s
+
 main.o: main.c.o
 .PHONY : main.o
 
@@ -153,6 +177,30 @@ main.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/main.c.s
 .PHONY : main.c.s
 
+sdl_playground.o: sdl_playground.c.o
+.PHONY : sdl_playground.o
+
+# target to build an object file
+sdl_playground.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/sdl_playground.c.o
+.PHONY : sdl_playground.c.o
+
+sdl_playground.i: sdl_playground.c.i
+.PHONY : sdl_playground.i
+
+# target to preprocess a source file
+sdl_playground.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/sdl_playground.c.i
+.PHONY : sdl_playground.c.i
+
+sdl_playground.s: sdl_playground.c.s
+.PHONY : sdl_playground.s
+
+# target to generate assembly for a file
+sdl_playground.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/sdl_playground.c.s
+.PHONY : sdl_playground.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -162,9 +210,15 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... main"
+	@echo "... array.o"
+	@echo "... array.i"
+	@echo "... array.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... sdl_playground.o"
+	@echo "... sdl_playground.i"
+	@echo "... sdl_playground.s"
 .PHONY : help
 
 

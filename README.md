@@ -7,3 +7,7 @@ compile in dir: [build](build/) by:
 ```bash
 make
 ```
+run in dir: [build](build/) by:
+```bash
+./main
+```

@@ -1,7 +1,10 @@
-CMakeFiles/main.dir/main.c.o: /home/haures/Desktop/SDL_Pacman/main.c \
- /usr/include/stdc-predef.h /usr/include/SDL2/SDL.h \
- /usr/include/SDL2/SDL_main.h /usr/include/SDL2/SDL_stdinc.h \
- /usr/include/SDL2/SDL_config.h \
+CMakeFiles/main.dir/sdl_playground.c.o: \
+ /home/haures/Desktop/SDL_Pacman/sdl_playground.c \
+ /usr/include/stdc-predef.h \
+ /home/haures/Desktop/SDL_Pacman/sdl_playground.h \
+ /usr/lib/gcc/x86_64-linux-gnu/12/include/stdbool.h \
+ /usr/include/SDL2/SDL.h /usr/include/SDL2/SDL_main.h \
+ /usr/include/SDL2/SDL_stdinc.h /usr/include/SDL2/SDL_config.h \
  /usr/include/x86_64-linux-gnu/SDL2/_real_SDL_config.h \
  /usr/include/SDL2/SDL_platform.h /usr/include/SDL2/begin_code.h \
  /usr/include/SDL2/close_code.h /usr/include/x86_64-linux-gnu/sys/types.h \
@@ -176,8 +179,4 @@ CMakeFiles/main.dir/main.c.o: /home/haures/Desktop/SDL_Pacman/main.c \
  /usr/include/SDL2/SDL_render.h /usr/include/SDL2/SDL_shape.h \
  /usr/include/SDL2/SDL_system.h /usr/include/SDL2/SDL_timer.h \
  /usr/include/SDL2/SDL_version.h /usr/include/SDL2/SDL_locale.h \
- /usr/include/SDL2/SDL_misc.h /usr/include/SDL2/SDL_image.h \
- /usr/include/SDL2/SDL.h \
- /usr/lib/gcc/x86_64-linux-gnu/12/include/stdbool.h \
- /home/haures/Desktop/SDL_Pacman/sdl_playground.h \
- /home/haures/Desktop/SDL_Pacman/array.h
+ /usr/include/SDL2/SDL_misc.h
