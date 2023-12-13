@@ -1,8 +1,20 @@
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.4)
 
-project(sdlapp)
+# Název projektu
+project(main)
 
-find_package(SDL2 REQUIRED)
+# Přidání přepínačů překladače
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address")
 
+# Vyhledání knihovny SDL
+find_package(SDL2)
+
+# Vytvoření programu s názvem `hra`
+# Program se bude skládat ze dvou zadaných zdrojových souborů (jednotek překladu)
 add_executable(main main.c)
-target_link_libraries(main SDL2 SDL2_image SDL2_ttf)
+
+# Přidání adresářů s hlavičkovými soubory k programu (obdoba -I)
+target_include_directories(main PRIVATE ${SDL2_INCLUDE_DIRS})
+
+# Přilinkování knihoven k programu (obdoba -l)
+target_link_libraries(main ${SDL2_LIBRARIES} m)

@@ -1,1 +1,1 @@
-/usr/bin/cc CMakeFiles/main.dir/main.c.o -o main  -lSDL2 -lSDL2_image -lSDL2_ttf 
+/usr/bin/cc  -fsanitize=address CMakeFiles/main.dir/main.c.o -o main  /usr/lib/x86_64-linux-gnu/libSDL2.so -lm 
