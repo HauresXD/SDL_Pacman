@@ -13,7 +13,7 @@
 typedef struct {
     int id;
     int direction;
-    int color;
+    char *color;
     bool killable;
 } Ghost;
 
