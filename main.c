@@ -9,13 +9,47 @@
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 #define PACMAN_SIZE 50
+#define GRID_SIZE 50
 
 typedef struct {
     int id;
     int direction;
     int color;
-    bool killable;
+    int killable;
 } Ghost;
+
+void drawGrid(SDL_Renderer *ren) {
+
+    SDL_SetRenderDrawColor(ren, 0, 0, 255, 255);
+
+    for (int x = 0; x <= WINDOW_WIDTH; x += GRID_SIZE) {
+
+        SDL_RenderDrawLine(ren, x, 0, x, WINDOW_HEIGHT);
+    }
+
+    for (int y = 0; y <= WINDOW_HEIGHT; y += GRID_SIZE) {
+
+        SDL_RenderDrawLine(ren, 0, y, WINDOW_WIDTH, y);
+    }
+}
+
+void makeWall(SDL_Renderer *renderer, int width, int height, int id, SDL_Rect *walls) {
+
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+
+    for (int w = 0; w < WINDOW_WIDTH; w += GRID_SIZE) {
+
+        for (int h = 0; h < WINDOW_HEIGHT; h += GRID_SIZE) {
+
+            if (w / GRID_SIZE == width && h / GRID_SIZE == height) {
+
+                SDL_Rect rect = {.x = w, .y = h, .w = GRID_SIZE, .h = GRID_SIZE};
+                SDL_RenderFillRect(renderer, &rect);
+                walls[id] = rect;
+            }
+        }
+    }
+}
 
 int main() {
 
@@ -30,8 +64,15 @@ int main() {
         return -1;
     }
 
-    int pos_x = 50;
-    int pos_y = 50;
+    int posX = 50;
+    int posY = 50;
+
+    int prevPosX = posX;
+    int prevPosY = posY;
+
+    int wallCount = 12;
+
+    SDL_Rect *rects = (SDL_Rect *)malloc(wallCount * sizeof(SDL_Rect));
 
     SDL_Event e;
     bool RUN = true;
@@ -50,48 +91,80 @@ int main() {
                     RUN = false;
                 }else if(e.key.keysym.sym == SDLK_LEFT) {
 
-                    if(pos_x != 0) {
+                    prevPosX = posX;
+                    prevPosY = posY;
+                    if(posX != 0) {
 
-                        pos_x -= 10;
+                        posX -= 10;
                     }
                 }else if(e.key.keysym.sym == SDLK_RIGHT) {
 
-                    if((pos_x+PACMAN_SIZE) < WINDOW_WIDTH) {
+                    prevPosX = posX;
+                    prevPosY = posY;
+                    if((posX+PACMAN_SIZE) < WINDOW_WIDTH) {
 
-                        pos_x += 10;
+                        posX += 10;
                     }
                 }else if(e.key.keysym.sym == SDLK_UP) {
 
-                    if(pos_y != 0) {
+                    prevPosX = posX;
+                    prevPosY = posY;
+                    if(posY != 0) {
 
-                        pos_y -= 10;
+                        posY -= 10;
                     }
                 }else if(e.key.keysym.sym == SDLK_DOWN) {
 
-                    if((pos_y+PACMAN_SIZE) < WINDOW_HEIGHT) {
+                    prevPosX = posX;
+                    prevPosY = posY;
+                    if((posY+PACMAN_SIZE) < WINDOW_HEIGHT) {
 
-                        pos_y += 10;
+                        posY += 10;
                     }
                 }
             }
-            // else if (e.type == SDL_MOUSEBUTTONUP && e.button.button == SDL_BUTTON_LEFT) { // mouse button released
-            //     // x: e.button.button.x
-            //     // y: e.button.button.y
-            // }
-            // else if (e.type == SDL_MOUSEMOTION) { // mouse movement
-            //     // x: e.motion.x
-            //     // y: e.motion.y
-            // }
         }
 
         SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
         SDL_RenderClear(ren);
+        // drawGrid(ren);
 
-        SDL_SetRenderDrawColor(ren, 255, 0, 0, 255);
+        // Automatizovat
+        makeWall(ren, 0, 0, 0, rects);
+        makeWall(ren, 0, 1, 1, rects);
+        makeWall(ren, 0, 2, 2, rects);
+        makeWall(ren, 0, 3, 3, rects);
+        makeWall(ren, 0, 4, 4, rects);
+        makeWall(ren, 0, 5, 5, rects);
+        makeWall(ren, 0, 6, 6, rects);
+        makeWall(ren, 0, 7, 7, rects);
+        makeWall(ren, 0, 8, 8, rects);
+        makeWall(ren, 0, 9, 9, rects);
+        makeWall(ren, 0, 10, 10, rects);
+        makeWall(ren, 0, 11, 11, rects);
+        makeWall(ren, 0, 12, 12, rects);
 
-        SDL_Rect rect = {.x = pos_x, .y = pos_y, .w = PACMAN_SIZE, .h = PACMAN_SIZE};
+        // 'Pacman'
+        SDL_SetRenderDrawColor(ren, 255, 255, 0, 255);
+        SDL_Rect pacman = {.x = posX, .y = posY, .w = PACMAN_SIZE, .h = PACMAN_SIZE};
+        SDL_RenderFillRect(ren, &pacman);
 
-        SDL_RenderFillRect(ren, &rect);
+        // if (SDL_HasIntersection(&pacman, &topWall)) {
+
+        //     posX = prevPosX;
+        //     posY = prevPosY;
+        // }
+
+        for(int i = 0; i < wallCount; i++) {
+
+            if (SDL_HasIntersection(&pacman, &rects[i])) {
+
+                posX = prevPosX;
+                posY = prevPosY;
+            }
+        }
+
+        // SDL_RenderCopyEx(ren, pacman, NULL, &rect, 45, NULL, 0);
         SDL_RenderPresent(ren);
     }
 
