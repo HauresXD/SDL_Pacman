@@ -14,7 +14,7 @@
 typedef struct {
     int id;
     int direction;
-    int color;
+    char *color;
     int killable;
 } Ghost;
 
