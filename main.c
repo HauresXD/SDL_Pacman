@@ -18,9 +18,15 @@ typedef struct {
     int killable;
 } Ghost;
 
+typedef struct {
+    int w;
+    int h;
+    int id;
+} Wall;
+
 void drawGrid(SDL_Renderer *ren) {
 
-    SDL_SetRenderDrawColor(ren, 0, 0, 255, 255);
+    SDL_SetRenderDrawColor(ren, 255, 255, 255, 255);
 
     for (int x = 0; x <= WINDOW_WIDTH; x += GRID_SIZE) {
 
@@ -35,7 +41,7 @@ void drawGrid(SDL_Renderer *ren) {
 
 void makeWall(SDL_Renderer *renderer, int width, int height, int id, SDL_Rect *walls) {
 
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 150, 255);
 
     for (int w = 0; w < WINDOW_WIDTH; w += GRID_SIZE) {
 
@@ -70,7 +76,7 @@ int main() {
     int prevPosX = posX;
     int prevPosY = posY;
 
-    int wallCount = 12;
+    int wallCount = 56;
 
     SDL_Rect *rects = (SDL_Rect *)malloc(wallCount * sizeof(SDL_Rect));
 
@@ -127,22 +133,27 @@ int main() {
 
         SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
         SDL_RenderClear(ren);
-        // drawGrid(ren);
+        drawGrid(ren);
 
-        // Automatizovat
-        makeWall(ren, 0, 0, 0, rects);
-        makeWall(ren, 0, 1, 1, rects);
-        makeWall(ren, 0, 2, 2, rects);
-        makeWall(ren, 0, 3, 3, rects);
-        makeWall(ren, 0, 4, 4, rects);
-        makeWall(ren, 0, 5, 5, rects);
-        makeWall(ren, 0, 6, 6, rects);
-        makeWall(ren, 0, 7, 7, rects);
-        makeWall(ren, 0, 8, 8, rects);
-        makeWall(ren, 0, 9, 9, rects);
-        makeWall(ren, 0, 10, 10, rects);
-        makeWall(ren, 0, 11, 11, rects);
-        makeWall(ren, 0, 12, 12, rects);
+        // makeWall(ren, 2 , 5, 1, rects);
+
+        for(int i = 0; i < 16; i++) {
+
+            if( i < 13) {
+
+                // L
+                makeWall(ren, 0, i, i, rects);
+                //R
+                makeWall(ren, 15, i, i+12, rects);
+            }
+
+            makeWall(ren, i, 0, i+24, rects);
+        }
+
+        for(int i = 16; i > 0; i--) {
+
+            makeWall(ren, i, 11, 56-i, rects);
+        }
 
         // 'Pacman'
         SDL_SetRenderDrawColor(ren, 255, 255, 0, 255);
@@ -161,6 +172,7 @@ int main() {
 
                 posX = prevPosX;
                 posY = prevPosY;
+                // printf("i: %d", i);
             }
         }
 
@@ -170,5 +182,7 @@ int main() {
 
     sdl_playground_destroy(win, ren);
 
+
+    free(rects);
     return 0;
 }

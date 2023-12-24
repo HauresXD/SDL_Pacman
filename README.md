@@ -1,13 +1,48 @@
 # SDL_Pacman
 
-Pacman game made in C with SDL2.
+Hra Pacman v jazyku C se SDL2.
 
-### Commands:<br>
-compile in dir: [build](build/) by:
+### Příkazy:<br>
+vytvoření složky build/:
+```bash
+mkdir build
+cd build
+```
+
+kompilujte v: build/:
 ```bash
 make
 ```
-run in dir: [build](build/) by:
+rozjeďte v: build/:
 ```bash
 ./main
 ```
+---
+### Mapa ze souboru:
+
+!!! Soubor musí být typu .txt !!!
+
+formát: 12x16
+
+<pre>
+[   
+    [. . . . . . . . . . . . . . . .],
+    [-||-], 
+    [-||-], 
+    [-||-],  
+    [-||-],
+    [-||-],
+    [-||-],
+    [-||-],
+    [-||-],
+    [-||-], 
+    [-||-],
+    [-||-],
+]
+</pre>
+
+---
+### Možné znaky:
+- '#' - zeď
+- 'G' - spawn duchů
+- 'P' - spawn pacmana
