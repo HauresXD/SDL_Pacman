@@ -20,8 +20,6 @@ rozjeďte v: build/:
 ---
 ### Mapa ze souboru:
 
-!!! Soubor musí být typu .txt !!!
-
 formát: 
 
 - 12x16
@@ -29,7 +27,7 @@ formát:
 - tečky nahraďte sami
   - pokud neurčíte spawn duchů, nebo pacmana vybere se náhodně
 - body se doplní automaticky
-- speciální body se doplní náhodně
+- speciální body se doplní automaticky a náhodně
 
 <pre>
 ################
