@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "*.embeddedhtml": "html",
-        "sdl_image.h": "c"
+        "sdl_image.h": "c",
+        "sdl_playground.h": "c"
     }
 }

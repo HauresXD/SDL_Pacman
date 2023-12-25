@@ -1,9 +1,10 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <stdbool.h>
+#include <assert.h>
 
 #include "sdl_playground.h"
-#include "array.h"
+// #include "array.h" // ?????? Asi není potřeba
 
 
 #define WINDOW_WIDTH 800
@@ -39,7 +40,7 @@ void drawGrid(SDL_Renderer *ren) {
     }
 }
 
-void makeWall(SDL_Renderer *renderer, int width, int height, int id, SDL_Rect *walls) {
+void drawWall(SDL_Renderer *renderer, int width, int height, int id, SDL_Rect *walls) {
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 150, 255);
 
@@ -55,6 +56,42 @@ void makeWall(SDL_Renderer *renderer, int width, int height, int id, SDL_Rect *w
             }
         }
     }
+}
+
+int readFile(SDL_Renderer *ren, Wall *walls) {
+
+    FILE *file = fopen("../playground.txt", "rt");
+    if(file == NULL) {
+
+        printf("Nenašel se 'playground.txt'\n");
+        exit(1);
+    }
+
+    char line[20];
+    int id = 0;
+
+    // Načíst řádek
+    for(int i = 0; i < 12; i++) {
+
+        fgets(line, sizeof(line), file);
+
+        // Znak po znaku
+        for(int j = 0; j < 16; j++) {
+
+            // Přidání zdi
+            if(line[j] == '#') {
+
+                walls[id].w = j;
+                walls[id].h = i;
+                walls[id].id = id;
+
+                id += 1;
+            }
+        }
+    }
+    fclose(file);
+
+    return id;
 }
 
 int main() {
@@ -76,9 +113,9 @@ int main() {
     int prevPosX = posX;
     int prevPosY = posY;
 
-    int wallCount = 56;
-
-    SDL_Rect *rects = (SDL_Rect *)malloc(wallCount * sizeof(SDL_Rect));
+    Wall *walls = (Wall *)malloc(192 * sizeof(Wall));
+    SDL_Rect *wallsDraw = (SDL_Rect *)malloc(192 * sizeof(SDL_Rect));
+    int numOfWalls = readFile(ren, walls);
 
     SDL_Event e;
     bool RUN = true;
@@ -135,24 +172,10 @@ int main() {
         SDL_RenderClear(ren);
         drawGrid(ren);
 
-        // makeWall(ren, 2 , 5, 1, rects);
+        // Kreslení zdí
+        for(int i = 0; i < numOfWalls; i++) {
 
-        for(int i = 0; i < 16; i++) {
-
-            if( i < 13) {
-
-                // L
-                makeWall(ren, 0, i, i, rects);
-                //R
-                makeWall(ren, 15, i, i+12, rects);
-            }
-
-            makeWall(ren, i, 0, i+24, rects);
-        }
-
-        for(int i = 16; i > 0; i--) {
-
-            makeWall(ren, i, 11, 56-i, rects);
+            drawWall(ren, walls[i].w, walls[i].h, walls[i].id, wallsDraw);
         }
 
         // 'Pacman'
@@ -160,29 +183,23 @@ int main() {
         SDL_Rect pacman = {.x = posX, .y = posY, .w = PACMAN_SIZE, .h = PACMAN_SIZE};
         SDL_RenderFillRect(ren, &pacman);
 
-        // if (SDL_HasIntersection(&pacman, &topWall)) {
+        // Collision
+        for(int i = 0; i < numOfWalls; i++) {
 
-        //     posX = prevPosX;
-        //     posY = prevPosY;
-        // }
-
-        for(int i = 0; i < wallCount; i++) {
-
-            if (SDL_HasIntersection(&pacman, &rects[i])) {
+            if (SDL_HasIntersection(&pacman, &wallsDraw[i])) {
 
                 posX = prevPosX;
                 posY = prevPosY;
-                // printf("i: %d", i);
             }
         }
 
-        // SDL_RenderCopyEx(ren, pacman, NULL, &rect, 45, NULL, 0);
         SDL_RenderPresent(ren);
     }
 
     sdl_playground_destroy(win, ren);
 
 
-    free(rects);
+    free(walls);
+    free(wallsDraw);
     return 0;
 }

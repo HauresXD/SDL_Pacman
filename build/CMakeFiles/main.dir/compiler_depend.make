@@ -265,8 +265,7 @@ CMakeFiles/main.dir/main.c.o: /home/haures/Desktop/SDL_Pacman/main.c \
   /usr/include/SDL2/SDL_image.h \
   /usr/include/SDL2/SDL.h \
   /usr/lib/gcc/x86_64-linux-gnu/12/include/stdbool.h \
-  /home/haures/Desktop/SDL_Pacman/sdl_playground.h \
-  /home/haures/Desktop/SDL_Pacman/array.h
+  /usr/include/assert.h
 
 CMakeFiles/main.dir/sdl_playground.c.o: /home/haures/Desktop/SDL_Pacman/sdl_playground.c \
   /usr/include/stdc-predef.h \
@@ -905,6 +904,8 @@ CMakeFiles/main.dir/sdl_playground.c.o: /home/haures/Desktop/SDL_Pacman/sdl_play
 /usr/include/x86_64-linux-gnu/bits/fp-fast.h:
 
 /usr/lib/gcc/x86_64-linux-gnu/12/include/clwbintrin.h:
+
+/usr/include/assert.h:
 
 /usr/lib/gcc/x86_64-linux-gnu/12/include/enqcmdintrin.h:
 

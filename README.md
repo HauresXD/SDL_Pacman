@@ -22,23 +22,28 @@ rozjeďte v: build/:
 
 !!! Soubor musí být typu .txt !!!
 
-formát: 12x16
+formát: 
+
+- 12x16
+- ohraničení je vždy doplněno samo
+- tečky nahraďte sami
+  - pokud neurčíte spawn duchů, nebo pacmana vybere se náhodně
+- body se doplní automaticky
+- speciální body se doplní náhodně
 
 <pre>
-[   
-    [. . . . . . . . . . . . . . . .],
-    [-||-], 
-    [-||-], 
-    [-||-],  
-    [-||-],
-    [-||-],
-    [-||-],
-    [-||-],
-    [-||-],
-    [-||-], 
-    [-||-],
-    [-||-],
-]
+################
+#..............# 
+#..............# 
+#..............#  
+#..............#
+#..............#
+#..............#
+#..............#
+#..............#
+#..............# 
+#..............#
+################
 </pre>
 
 ---
