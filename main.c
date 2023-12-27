@@ -9,15 +9,22 @@
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
-#define PACMAN_SIZE 50
+#define DEF_SIZE 50
 #define GRID_SIZE 50
 
 typedef struct {
     int id;
+    int w;
+    int h;
     int direction;
     char *color;
     int killable;
 } Ghost;
+
+typedef struct {
+    int w;
+    int h;
+} GhostSpawn;
 
 typedef struct {
     int w;
@@ -29,7 +36,7 @@ typedef struct {
     int w;
     int h;
     int id;
-    int direction; // Right = 0, Down = 1, Left = 2, Up = 3
+    int direction;
 } Pacman;
 
 void drawGrid(SDL_Renderer *ren) {
@@ -65,7 +72,7 @@ void drawWall(SDL_Renderer *renderer, int width, int height, int id, SDL_Rect *w
     }
 }
 
-int readFile(SDL_Renderer *ren, Wall *walls, Pacman *pman) {
+int readFile(SDL_Renderer *ren, Wall *walls, Pacman *pman, GhostSpawn *gSpawn) {
 
     FILE *file = fopen("../playground.txt", "rt");
     if(file == NULL) {
@@ -76,6 +83,8 @@ int readFile(SDL_Renderer *ren, Wall *walls, Pacman *pman) {
 
     char line[20];
     int id = 0;
+    int wasP = 0;
+    int wasG = 0;
 
     // Načíst řádek
     for(int i = 0; i < 12; i++) {
@@ -95,14 +104,34 @@ int readFile(SDL_Renderer *ren, Wall *walls, Pacman *pman) {
                 id += 1;
             }else if(line[j] == 'P') {
 
-                printf("YEEEE");
                 pman->w = j;
                 pman->h = i;
                 pman->id = 0;
                 pman->direction = 0;
 
                 id += 1;
+                wasP = 1;
+            }else if(line[j] == 'G') {
+
+                gSpawn->w = j;
+                gSpawn->h = i;
+
+                id += 1;
+                wasG = 1;
             }
+        }
+
+        if(wasP == 0) {
+
+            pman->w = 1;
+            pman->h = 1;
+            pman->id = 0;
+            pman->direction = 0;
+        }
+        if(wasG == 0) {
+
+            gSpawn->w = 10;
+            gSpawn->h = 10;
         }
     }
     fclose(file);
@@ -129,16 +158,25 @@ int main() {
         fprintf(stderr, "Could not load image: %s\n", SDL_GetError());
         return -1;
     }
+    SDL_Texture *gSpawnT = IMG_LoadTexture(ren, "../imgs/grave.png");
+    if(!gSpawnT) {
 
-    // Wall pman = {.w = 1, .h = 1, .id = 0};
+        fprintf(stderr, "Could not load image: %s\n", SDL_GetError());
+        return -1;
+    }
+
     Pacman *pacman = (Pacman *)malloc(1 * sizeof(Pacman));
     Wall *walls = (Wall *)malloc(192 * sizeof(Wall));
+    GhostSpawn *gSpawn = (GhostSpawn *)malloc((1 * sizeof(GhostSpawn)));
     SDL_Rect *wallsDraw = (SDL_Rect *)malloc(192 * sizeof(SDL_Rect));
-    int numOfWalls = readFile(ren, walls, pacman);
 
+    int numOfWalls = readFile(ren, walls, pacman, gSpawn);
+    int numOfGhosts = 4;
 
-    int posX = pacman->w*PACMAN_SIZE;
-    int posY = pacman->h*PACMAN_SIZE;
+    Ghost *ghosts = (Ghost *)malloc(numOfGhosts * sizeof(Ghost));
+
+    int posX = pacman->w*DEF_SIZE;
+    int posY = pacman->h*DEF_SIZE;
     int prevPosX = posX;
     int prevPosY = posY;
 
@@ -170,7 +208,7 @@ int main() {
 
                     prevPosX = posX;
                     prevPosY = posY;
-                    if((posX+PACMAN_SIZE) < WINDOW_WIDTH) {
+                    if((posX+DEF_SIZE) < WINDOW_WIDTH) {
 
                         posX += 10;
                     }
@@ -188,7 +226,7 @@ int main() {
 
                     prevPosX = posX;
                     prevPosY = posY;
-                    if((posY+PACMAN_SIZE) < WINDOW_HEIGHT) {
+                    if((posY+DEF_SIZE) < WINDOW_HEIGHT) {
 
                         posY += 10;
                     }
@@ -207,10 +245,14 @@ int main() {
             drawWall(ren, walls[i].w, walls[i].h, walls[i].id, wallsDraw);
         }
 
-        // 'Pacman'
+        // Grave
+        SDL_Rect gSpawnIG = {.x = gSpawn->w*DEF_SIZE, .y = gSpawn->h*DEF_SIZE, .w = DEF_SIZE, .h = DEF_SIZE};
+        SDL_RenderCopyEx(ren, gSpawnT, NULL, &gSpawnIG, 0, NULL, 0);
+
+        // Pacman
         SDL_SetRenderDrawColor(ren, 255, 255, 0, 255);
-        SDL_Rect pacmanIG = {.x = posX, .y = posY, .w = PACMAN_SIZE, .h = PACMAN_SIZE};
-        //                                            Rotace --> může se měnit podle toho, kudy jde
+        SDL_Rect pacmanIG = {.x = posX, .y = posY, .w = DEF_SIZE, .h = DEF_SIZE};
+        // Pacman movement
         int pAngle = 0;
         if(pacman->direction == 0) {
 
@@ -243,6 +285,9 @@ int main() {
     sdl_playground_destroy(win, ren);
 
 
+    // Free & Return
+    free(gSpawn);
+    free(ghosts);
     free(pacman);
     free(walls);
     free(wallsDraw);
