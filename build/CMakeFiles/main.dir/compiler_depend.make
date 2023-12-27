@@ -265,7 +265,8 @@ CMakeFiles/main.dir/main.c.o: /home/haures/Desktop/SDL_Pacman/main.c \
   /usr/include/SDL2/SDL_image.h \
   /usr/include/SDL2/SDL.h \
   /usr/lib/gcc/x86_64-linux-gnu/12/include/stdbool.h \
-  /usr/include/assert.h
+  /usr/include/assert.h \
+  /home/haures/Desktop/SDL_Pacman/sdl_playground.h
 
 CMakeFiles/main.dir/sdl_playground.c.o: /home/haures/Desktop/SDL_Pacman/sdl_playground.c \
   /usr/include/stdc-predef.h \

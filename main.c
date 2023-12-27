@@ -25,6 +25,13 @@ typedef struct {
     int id;
 } Wall;
 
+typedef struct {
+    int w;
+    int h;
+    int id;
+    int direction; // Right = 0, Down = 1, Left = 2, Up = 3
+} Pacman;
+
 void drawGrid(SDL_Renderer *ren) {
 
     SDL_SetRenderDrawColor(ren, 255, 255, 255, 255);
@@ -58,7 +65,7 @@ void drawWall(SDL_Renderer *renderer, int width, int height, int id, SDL_Rect *w
     }
 }
 
-int readFile(SDL_Renderer *ren, Wall *walls) {
+int readFile(SDL_Renderer *ren, Wall *walls, Pacman *pman) {
 
     FILE *file = fopen("../playground.txt", "rt");
     if(file == NULL) {
@@ -78,12 +85,21 @@ int readFile(SDL_Renderer *ren, Wall *walls) {
         // Znak po znaku
         for(int j = 0; j < 16; j++) {
 
-            // Přidání zdi
+            // Přidání objektu
             if(line[j] == '#') {
 
                 walls[id].w = j;
                 walls[id].h = i;
                 walls[id].id = id;
+
+                id += 1;
+            }else if(line[j] == 'P') {
+
+                printf("YEEEE");
+                pman->w = j;
+                pman->h = i;
+                pman->id = 0;
+                pman->direction = 0;
 
                 id += 1;
             }
@@ -107,15 +123,24 @@ int main() {
         return -1;
     }
 
-    int posX = 50;
-    int posY = 50;
+    SDL_Texture *pacmanT = IMG_LoadTexture(ren, "../imgs/Pacman.png");
+    if(!pacmanT) {
 
-    int prevPosX = posX;
-    int prevPosY = posY;
+        fprintf(stderr, "Could not load image: %s\n", SDL_GetError());
+        return -1;
+    }
 
+    // Wall pman = {.w = 1, .h = 1, .id = 0};
+    Pacman *pacman = (Pacman *)malloc(1 * sizeof(Pacman));
     Wall *walls = (Wall *)malloc(192 * sizeof(Wall));
     SDL_Rect *wallsDraw = (SDL_Rect *)malloc(192 * sizeof(SDL_Rect));
-    int numOfWalls = readFile(ren, walls);
+    int numOfWalls = readFile(ren, walls, pacman);
+
+
+    int posX = pacman->w*PACMAN_SIZE;
+    int posY = pacman->h*PACMAN_SIZE;
+    int prevPosX = posX;
+    int prevPosY = posY;
 
     SDL_Event e;
     bool RUN = true;
@@ -140,6 +165,7 @@ int main() {
 
                         posX -= 10;
                     }
+                    pacman->direction = 2;
                 }else if(e.key.keysym.sym == SDLK_RIGHT) {
 
                     prevPosX = posX;
@@ -148,6 +174,7 @@ int main() {
 
                         posX += 10;
                     }
+                    pacman->direction = 0;
                 }else if(e.key.keysym.sym == SDLK_UP) {
 
                     prevPosX = posX;
@@ -156,6 +183,7 @@ int main() {
 
                         posY -= 10;
                     }
+                    pacman->direction = 3;
                 }else if(e.key.keysym.sym == SDLK_DOWN) {
 
                     prevPosX = posX;
@@ -164,6 +192,7 @@ int main() {
 
                         posY += 10;
                     }
+                    pacman->direction = 1;
                 }
             }
         }
@@ -180,13 +209,28 @@ int main() {
 
         // 'Pacman'
         SDL_SetRenderDrawColor(ren, 255, 255, 0, 255);
-        SDL_Rect pacman = {.x = posX, .y = posY, .w = PACMAN_SIZE, .h = PACMAN_SIZE};
-        SDL_RenderFillRect(ren, &pacman);
+        SDL_Rect pacmanIG = {.x = posX, .y = posY, .w = PACMAN_SIZE, .h = PACMAN_SIZE};
+        //                                            Rotace --> může se měnit podle toho, kudy jde
+        int pAngle = 0;
+        if(pacman->direction == 0) {
+
+            pAngle = 0;
+        }else if(pacman->direction == 1) {
+
+            pAngle = 90;
+        }else if(pacman->direction == 2) {
+
+            pAngle = 180;
+        }else if(pacman->direction == 3) {
+
+            pAngle = 270;
+        }
+        SDL_RenderCopyEx(ren, pacmanT, NULL, &pacmanIG, pAngle, NULL, 0);
 
         // Collision
         for(int i = 0; i < numOfWalls; i++) {
 
-            if (SDL_HasIntersection(&pacman, &wallsDraw[i])) {
+            if (SDL_HasIntersection(&pacmanIG, &wallsDraw[i])) {
 
                 posX = prevPosX;
                 posY = prevPosY;
@@ -199,6 +243,7 @@ int main() {
     sdl_playground_destroy(win, ren);
 
 
+    free(pacman);
     free(walls);
     free(wallsDraw);
     return 0;
