@@ -177,6 +177,6 @@ CMakeFiles/main.dir/main.c.o: /home/haures/Desktop/SDL_Pacman/main.c \
  /usr/include/SDL2/SDL_system.h /usr/include/SDL2/SDL_timer.h \
  /usr/include/SDL2/SDL_version.h /usr/include/SDL2/SDL_locale.h \
  /usr/include/SDL2/SDL_misc.h /usr/include/SDL2/SDL_image.h \
- /usr/include/SDL2/SDL.h \
+ /usr/include/SDL2/SDL.h /usr/include/SDL2/SDL_ttf.h \
  /usr/lib/gcc/x86_64-linux-gnu/12/include/stdbool.h /usr/include/assert.h \
  /home/haures/Desktop/SDL_Pacman/sdl_playground.h

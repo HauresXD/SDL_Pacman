@@ -2,6 +2,8 @@
     "files.associations": {
         "*.embeddedhtml": "html",
         "sdl_image.h": "c",
-        "sdl_playground.h": "c"
+        "sdl_playground.h": "c",
+        "sdl.h": "c",
+        "sdl_ttf.h": "c"
     }
 }

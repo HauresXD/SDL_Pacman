@@ -17,5 +17,5 @@ add_executable(main main.c sdl_playground.c array.c)
 target_include_directories(main PRIVATE ${SDL2_INCLUDE_DIRS})
 
 # Přilinkování knihoven k programu (obdoba -l)
-target_link_libraries(main -lSDL2 -lSDL2_image m)
+target_link_libraries(main -lSDL2 -lSDL2_image -lSDL2_ttf m)
 

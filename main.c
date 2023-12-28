@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include <stdbool.h>
 #include <assert.h>
 
@@ -11,6 +12,8 @@
 #define WINDOW_HEIGHT 600
 #define DEF_SIZE 50
 #define GRID_SIZE 50
+#define FONT_PATH "../arial.ttf"
+#define FONT_SIZE 24
 
 typedef struct {
     int id;
@@ -38,6 +41,16 @@ typedef struct {
     int id;
     int direction;
 } Pacman;
+
+typedef struct {
+    int x;
+    int y;
+} Point;
+
+typedef struct {
+    int x;
+    int y;
+}Special;
 
 void drawGrid(SDL_Renderer *ren) {
 
@@ -165,20 +178,32 @@ int main() {
         return -1;
     }
 
+    if (TTF_Init() == -1) {
+
+        fprintf(stderr, "TTF_Init: %s\n", TTF_GetError());
+        return -1;
+    }
+
+    TTF_Font *font = TTF_OpenFont(FONT_PATH, FONT_SIZE);
+    if (!font) {
+        fprintf(stderr, "TTF_OpenFont: %s\n", TTF_GetError());
+        return -1;
+    }
+
     Pacman *pacman = (Pacman *)malloc(1 * sizeof(Pacman));
     Wall *walls = (Wall *)malloc(192 * sizeof(Wall));
     GhostSpawn *gSpawn = (GhostSpawn *)malloc((1 * sizeof(GhostSpawn)));
     SDL_Rect *wallsDraw = (SDL_Rect *)malloc(192 * sizeof(SDL_Rect));
+    Ghost *ghosts = (Ghost *)malloc(4 * sizeof(Ghost));
 
     int numOfWalls = readFile(ren, walls, pacman, gSpawn);
-    int numOfGhosts = 4;
-
-    Ghost *ghosts = (Ghost *)malloc(numOfGhosts * sizeof(Ghost));
 
     int posX = pacman->w*DEF_SIZE;
     int posY = pacman->h*DEF_SIZE;
     int prevPosX = posX;
     int prevPosY = posY;
+
+    SDL_Color textColor = {255, 255, 255};
 
     SDL_Event e;
     bool RUN = true;
@@ -279,11 +304,27 @@ int main() {
             }
         }
 
+        int points = 4;
+        char pointsStatus[15];
+        sprintf(pointsStatus, "Points: %d", points);
+
+        // Printf points
+        SDL_Surface *textSurface = TTF_RenderText_Solid(font, pointsStatus, textColor);
+        SDL_Texture *textTexture = SDL_CreateTextureFromSurface(ren, textSurface);
+        SDL_Rect textRect = {.x = 0, .y = 0, .w = textSurface->w, .h = textSurface->h};
+        SDL_RenderCopy(ren, textTexture, NULL, &textRect);
+
+        SDL_FreeSurface(textSurface);
+        SDL_DestroyTexture(textTexture);
+
         SDL_RenderPresent(ren);
     }
 
     sdl_playground_destroy(win, ren);
 
+
+    TTF_CloseFont(font);
+    TTF_Quit();
 
     // Free & Return
     free(gSpawn);

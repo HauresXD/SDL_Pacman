@@ -264,6 +264,7 @@ CMakeFiles/main.dir/main.c.o: /home/haures/Desktop/SDL_Pacman/main.c \
   /usr/include/SDL2/SDL_misc.h \
   /usr/include/SDL2/SDL_image.h \
   /usr/include/SDL2/SDL.h \
+  /usr/include/SDL2/SDL_ttf.h \
   /usr/lib/gcc/x86_64-linux-gnu/12/include/stdbool.h \
   /usr/include/assert.h \
   /home/haures/Desktop/SDL_Pacman/sdl_playground.h
@@ -487,6 +488,8 @@ CMakeFiles/main.dir/sdl_playground.c.o: /home/haures/Desktop/SDL_Pacman/sdl_play
 
 
 /home/haures/Desktop/SDL_Pacman/sdl_playground.h:
+
+/usr/include/SDL2/SDL_ttf.h:
 
 /usr/include/SDL2/SDL_misc.h:
 
