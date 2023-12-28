@@ -7,7 +7,7 @@ bool sdl_playground_init( SDL_Window ** win, SDL_Renderer ** renderer, const int
         return false;
     }
 
-    *win = SDL_CreateWindow("SDL experiments", 100, 100, window_width, window_height, SDL_WINDOW_SHOWN);
+    *win = SDL_CreateWindow("Pacman", 100, 100, window_width, window_height, SDL_WINDOW_SHOWN);
     if (!win) {
         fprintf(stderr, "SDL_CreateWindow Error: %s\n", SDL_GetError());
         SDL_Quit();

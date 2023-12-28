@@ -267,6 +267,10 @@ CMakeFiles/main.dir/main.c.o: /home/haures/Desktop/SDL_Pacman/main.c \
   /usr/include/SDL2/SDL_ttf.h \
   /usr/lib/gcc/x86_64-linux-gnu/12/include/stdbool.h \
   /usr/include/assert.h \
+  /usr/include/time.h \
+  /usr/include/x86_64-linux-gnu/bits/time.h \
+  /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
+  /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
   /home/haures/Desktop/SDL_Pacman/sdl_playground.h
 
 CMakeFiles/main.dir/sdl_playground.c.o: /home/haures/Desktop/SDL_Pacman/sdl_playground.c \
@@ -489,6 +493,8 @@ CMakeFiles/main.dir/sdl_playground.c.o: /home/haures/Desktop/SDL_Pacman/sdl_play
 
 /home/haures/Desktop/SDL_Pacman/sdl_playground.h:
 
+/usr/include/x86_64-linux-gnu/bits/time.h:
+
 /usr/include/SDL2/SDL_ttf.h:
 
 /usr/include/SDL2/SDL_misc.h:
@@ -529,6 +535,8 @@ CMakeFiles/main.dir/sdl_playground.c.o: /home/haures/Desktop/SDL_Pacman/sdl_play
 
 /usr/lib/gcc/x86_64-linux-gnu/12/include/amxint8intrin.h:
 
+/usr/include/time.h:
+
 /usr/lib/gcc/x86_64-linux-gnu/12/include/avx512bf16intrin.h:
 
 /usr/lib/gcc/x86_64-linux-gnu/12/include/avx512bf16vlintrin.h:
@@ -568,6 +576,8 @@ CMakeFiles/main.dir/sdl_playground.c.o: /home/haures/Desktop/SDL_Pacman/sdl_play
 /usr/lib/gcc/x86_64-linux-gnu/12/include/avx512vlintrin.h:
 
 /usr/lib/gcc/x86_64-linux-gnu/12/include/avx512cdintrin.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/struct_tm.h:
 
 /usr/lib/gcc/x86_64-linux-gnu/12/include/avx512pfintrin.h:
 
@@ -750,6 +760,8 @@ CMakeFiles/main.dir/sdl_playground.c.o: /home/haures/Desktop/SDL_Pacman/sdl_play
 /usr/include/x86_64-linux-gnu/bits/waitflags.h:
 
 /usr/include/x86_64-linux-gnu/bits/waitstatus.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h:
 
 /usr/include/SDL2/SDL_rect.h:
 

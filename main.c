@@ -3,6 +3,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <stdbool.h>
 #include <assert.h>
+#include <time.h>
 
 #include "sdl_playground.h"
 // #include "array.h" // ?????? Asi není potřeba
@@ -45,11 +46,15 @@ typedef struct {
 typedef struct {
     int x;
     int y;
+    int id;
+    int skip;
 } Point;
 
 typedef struct {
     int x;
     int y;
+    int id;
+    int skip;
 }Special;
 
 void drawGrid(SDL_Renderer *ren) {
@@ -85,7 +90,75 @@ void drawWall(SDL_Renderer *renderer, int width, int height, int id, SDL_Rect *w
     }
 }
 
-int readFile(SDL_Renderer *ren, Wall *walls, Pacman *pman, GhostSpawn *gSpawn) {
+void placeSpecialPoints(SDL_Renderer *renderer, int x, int y, int id, SDL_Rect *sPointsD, Special *sPoints) {
+
+    SDL_SetRenderDrawColor(renderer, 210, 124, 15, 255);
+
+    for (int w = 0; w < WINDOW_WIDTH; w += GRID_SIZE) {
+
+        for (int h = 0; h < WINDOW_HEIGHT; h += GRID_SIZE) {
+
+            if (w / GRID_SIZE == x && h / GRID_SIZE == y) {
+
+                if(sPoints[id].skip != 1) {
+
+                    SDL_Rect rect = {.x = w+20, .y = h+20, .w = 10, .h = 10};
+                    SDL_RenderFillRect(renderer, &rect);
+                    sPointsD[id] = rect;
+                }
+            }
+        }
+    }
+}
+
+void placePoints(SDL_Renderer *renderer, int x, int y, int id, SDL_Rect *pointsD, Point *points) {
+
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+
+    for (int w = 0; w < WINDOW_WIDTH; w += GRID_SIZE) {
+
+        for (int h = 0; h < WINDOW_HEIGHT; h += GRID_SIZE) {
+
+            if (w / GRID_SIZE == x && h / GRID_SIZE == y) {
+
+                if(points[id].skip != 1) {
+
+                    SDL_Rect rect = {.x = w+22, .y = h+22, .w = 5, .h = 5};
+                    SDL_RenderFillRect(renderer, &rect);
+                    pointsD[id] = rect;
+                }
+            }
+        }
+    }
+}
+
+void delPoint(int id, Point *points) {
+
+    int num = 192;
+    for (int i = 0; i < num; i++) {
+
+        if (points[i].id == id) {
+
+            points[i].skip = 1;
+            break;
+        }
+    }
+}
+
+void delSpecialPoints(int id, Special *sPoints) {
+
+    int num = 4;
+    for (int i = 0; i < num; i++) {
+
+        if (sPoints[i].id == id) {
+
+            sPoints[i].skip = 1;
+            break;
+        }
+    }
+}
+
+int readFile(SDL_Renderer *ren, Wall *walls, Pacman *pman, GhostSpawn *gSpawn, Special *sPoints, Point *points) {
 
     FILE *file = fopen("../playground.txt", "rt");
     if(file == NULL) {
@@ -98,6 +171,8 @@ int readFile(SDL_Renderer *ren, Wall *walls, Pacman *pman, GhostSpawn *gSpawn) {
     int id = 0;
     int wasP = 0;
     int wasG = 0;
+    int sPointCount = 0;
+    int pointsCount = 0;
 
     // Načíst řádek
     for(int i = 0; i < 12; i++) {
@@ -122,15 +197,31 @@ int readFile(SDL_Renderer *ren, Wall *walls, Pacman *pman, GhostSpawn *gSpawn) {
                 pman->id = 0;
                 pman->direction = 0;
 
-                id += 1;
                 wasP = 1;
             }else if(line[j] == 'G') {
 
                 gSpawn->w = j;
                 gSpawn->h = i;
 
-                id += 1;
                 wasG = 1;
+            }else {
+
+                int randint = rand() % 25;
+                if(randint > 22 && sPointCount < 4) {
+
+                    sPoints[sPointCount].x = j;
+                    sPoints[sPointCount].y = i;
+                    sPoints[sPointCount].id = sPointCount;
+
+                    sPointCount += 1;
+                }else {
+
+                    points[pointsCount].x = j;
+                    points[pointsCount].y = i;
+                    points[pointsCount].id = pointsCount;
+
+                    pointsCount += 1;
+                }
             }
         }
 
@@ -153,6 +244,8 @@ int readFile(SDL_Renderer *ren, Wall *walls, Pacman *pman, GhostSpawn *gSpawn) {
 }
 
 int main() {
+
+    srand((unsigned int)time(NULL));
 
     SDL_Window *win = NULL;
     SDL_Renderer *ren = NULL;
@@ -195,8 +288,12 @@ int main() {
     GhostSpawn *gSpawn = (GhostSpawn *)malloc((1 * sizeof(GhostSpawn)));
     SDL_Rect *wallsDraw = (SDL_Rect *)malloc(192 * sizeof(SDL_Rect));
     Ghost *ghosts = (Ghost *)malloc(4 * sizeof(Ghost));
+    Point *points = (Point *)malloc(192 * sizeof(Point));
+    SDL_Rect *pointsDraw = (SDL_Rect *)malloc(192 * sizeof(SDL_Rect));
+    Special *specialPoints = (Special *)malloc(4 * sizeof(Special));
+    SDL_Rect *specialPointsDraw = (SDL_Rect *)malloc(4 * sizeof(SDL_Rect));
 
-    int numOfWalls = readFile(ren, walls, pacman, gSpawn);
+    int numOfWalls = readFile(ren, walls, pacman, gSpawn, specialPoints, points);
 
     int posX = pacman->w*DEF_SIZE;
     int posY = pacman->h*DEF_SIZE;
@@ -204,6 +301,8 @@ int main() {
     int prevPosY = posY;
 
     SDL_Color textColor = {255, 255, 255};
+
+    int currPoints = 0;
 
     SDL_Event e;
     bool RUN = true;
@@ -264,10 +363,22 @@ int main() {
         SDL_RenderClear(ren);
         drawGrid(ren);
 
-        // Kreslení zdí
+        // Draw walls
         for(int i = 0; i < numOfWalls; i++) {
 
             drawWall(ren, walls[i].w, walls[i].h, walls[i].id, wallsDraw);
+        }
+
+        // Draw sPoints
+        for(int i = 0; i < 4; i++) {
+
+            placeSpecialPoints(ren, specialPoints[i].x, specialPoints[i].y, i, specialPointsDraw, specialPoints);
+        }
+
+        // Draw points
+        for(int i = 0; i < 192; i++) {
+
+            placePoints(ren, points[i].x, points[i].y, i, pointsDraw, points);
         }
 
         // Grave
@@ -297,16 +408,34 @@ int main() {
         // Collision
         for(int i = 0; i < numOfWalls; i++) {
 
-            if (SDL_HasIntersection(&pacmanIG, &wallsDraw[i])) {
+            if(SDL_HasIntersection(&pacmanIG, &wallsDraw[i])) {
 
                 posX = prevPosX;
                 posY = prevPosY;
             }
         }
 
-        int points = 4;
+        // Collect Specials
+        for(int i = 0; i < 4; i++) {
+
+            if(SDL_HasIntersection(&pacmanIG, &specialPointsDraw[i]) && specialPoints[i].skip != 1) {
+
+                delSpecialPoints(i, specialPoints);
+            }
+        }
+
+        // Collect Points
+        for(int i = 0; i < 192; i++) {
+
+            if(SDL_HasIntersection(&pacmanIG, &pointsDraw[i]) && points[i].skip != 1) {
+
+                currPoints += 1;
+                delPoint(i, points);
+            }
+        }
+
         char pointsStatus[15];
-        sprintf(pointsStatus, "Points: %d", points);
+        sprintf(pointsStatus, "Points: %d", currPoints);
 
         // Printf points
         SDL_Surface *textSurface = TTF_RenderText_Solid(font, pointsStatus, textColor);
@@ -327,6 +456,10 @@ int main() {
     TTF_Quit();
 
     // Free & Return
+    free(points);
+    free(pointsDraw);
+    free(specialPoints);
+    free(specialPointsDraw);
     free(gSpawn);
     free(ghosts);
     free(pacman);
