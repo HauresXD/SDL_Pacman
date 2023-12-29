@@ -21,7 +21,6 @@ typedef struct {
     int w;
     int h;
     int direction;
-    char *color;
     int killable;
 } Ghost;
 
@@ -158,6 +157,31 @@ void delSpecialPoints(int id, Special *sPoints) {
     }
 }
 
+void drawGhosts(SDL_Renderer *renderer, SDL_Rect *ghostsD, Ghost *ghosts, SDL_Texture *ghostsT[]) {
+
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+
+    for(int i = 0; i < 4; i++) {
+
+        char path[25];
+        sprintf(path, "../imgs/ghost_%d.png", i);
+
+        ghostsT[i] = IMG_LoadTexture(renderer, path);
+
+        if (!ghostsT[i]) {
+            fprintf(stderr, "Nejde načíst obrázek pro ducha %d: %s\n", i, SDL_GetError());
+        }
+
+        ghostsD[i].x = ghosts[i].w * DEF_SIZE;
+        ghostsD[i].y = ghosts[i].h * DEF_SIZE;
+        ghostsD[i].w = DEF_SIZE;
+        ghostsD[i].h = DEF_SIZE;
+
+        SDL_RenderCopy(renderer, ghostsT[i], NULL, &ghostsD[i]);
+    }
+
+}
+
 int readFile(SDL_Renderer *ren, Wall *walls, Pacman *pman, GhostSpawn *gSpawn, Special *sPoints, Point *points) {
 
     FILE *file = fopen("../playground.txt", "rt");
@@ -258,6 +282,7 @@ int main() {
         return -1;
     }
 
+    // Pacman and Grave load texture check
     SDL_Texture *pacmanT = IMG_LoadTexture(ren, "../imgs/Pacman.png");
     if(!pacmanT) {
 
@@ -271,27 +296,48 @@ int main() {
         return -1;
     }
 
+    // Ghost texture check
+
+    // Font load check
     if (TTF_Init() == -1) {
 
         fprintf(stderr, "TTF_Init: %s\n", TTF_GetError());
         return -1;
     }
-
     TTF_Font *font = TTF_OpenFont(FONT_PATH, FONT_SIZE);
     if (!font) {
         fprintf(stderr, "TTF_OpenFont: %s\n", TTF_GetError());
         return -1;
     }
 
+
+
+    // --- Pacman
     Pacman *pacman = (Pacman *)malloc(1 * sizeof(Pacman));
+    // --- Walls
     Wall *walls = (Wall *)malloc(192 * sizeof(Wall));
-    GhostSpawn *gSpawn = (GhostSpawn *)malloc((1 * sizeof(GhostSpawn)));
     SDL_Rect *wallsDraw = (SDL_Rect *)malloc(192 * sizeof(SDL_Rect));
+    // --- Ghost spawn
+    GhostSpawn *gSpawn = (GhostSpawn *)malloc((1 * sizeof(GhostSpawn)));
+    // --- Ghosts
     Ghost *ghosts = (Ghost *)malloc(4 * sizeof(Ghost));
+    SDL_Rect *ghostsDraw = (SDL_Rect *)malloc(4 * sizeof(SDL_Rect));
+    SDL_Texture *ghostsTextures[4];
+    // --- Points
     Point *points = (Point *)malloc(192 * sizeof(Point));
     SDL_Rect *pointsDraw = (SDL_Rect *)malloc(192 * sizeof(SDL_Rect));
+    // --- Special points
     Special *specialPoints = (Special *)malloc(4 * sizeof(Special));
     SDL_Rect *specialPointsDraw = (SDL_Rect *)malloc(4 * sizeof(SDL_Rect));
+
+    for(int i = 0; i < 4; i++) {
+
+        ghosts[i].id = i;
+        ghosts[i].h = i+1;
+        ghosts[i].w = i+1;
+        ghosts[i].direction = 0;
+        ghosts[i].killable = 0;
+    }
 
     int numOfWalls = readFile(ren, walls, pacman, gSpawn, specialPoints, points);
 
@@ -299,15 +345,18 @@ int main() {
     int posY = pacman->h*DEF_SIZE;
     int prevPosX = posX;
     int prevPosY = posY;
+    int origPosX = posX;
+    int origPosY = posY;
 
     SDL_Color textColor = {255, 255, 255};
 
-    int currPoints = 0;
+    int CPOINTS = 0;
+    int LIVES = 3;
 
     SDL_Event e;
     bool RUN = true;
 
-    while (RUN) {
+    while(RUN) {
 
         while (SDL_PollEvent(&e)) {
 
@@ -381,6 +430,12 @@ int main() {
             placePoints(ren, points[i].x, points[i].y, i, pointsDraw, points);
         }
 
+        // Draw ghosts
+        for(int i = 0; i < 4; i++) {
+
+            drawGhosts(ren, ghostsDraw, ghosts, ghostsTextures);
+        }
+
         // Grave
         SDL_Rect gSpawnIG = {.x = gSpawn->w*DEF_SIZE, .y = gSpawn->h*DEF_SIZE, .w = DEF_SIZE, .h = DEF_SIZE};
         SDL_RenderCopyEx(ren, gSpawnT, NULL, &gSpawnIG, 0, NULL, 0);
@@ -405,7 +460,7 @@ int main() {
         }
         SDL_RenderCopyEx(ren, pacmanT, NULL, &pacmanIG, pAngle, NULL, 0);
 
-        // Collision
+        // Collision with walls
         for(int i = 0; i < numOfWalls; i++) {
 
             if(SDL_HasIntersection(&pacmanIG, &wallsDraw[i])) {
@@ -413,6 +468,27 @@ int main() {
                 posX = prevPosX;
                 posY = prevPosY;
             }
+        }
+
+        // Touched ghost
+        for(int i = 0; i < 4; i++) {
+
+            if(SDL_HasIntersection(&pacmanIG, &ghostsDraw[i])) {
+
+                if(ghosts[i].killable == 0) {
+
+                    LIVES -= 1;
+                    posX = origPosX;
+                    posY = origPosY;
+                }// TADY ZABÍT DUCHA pokud .killable == 1
+            }
+        }
+
+        // LIVES check
+        if(LIVES <= 0) {
+
+            printf("THE END\n");
+            RUN = 0;
         }
 
         // Collect Specials
@@ -429,28 +505,43 @@ int main() {
 
             if(SDL_HasIntersection(&pacmanIG, &pointsDraw[i]) && points[i].skip != 1) {
 
-                currPoints += 1;
+                CPOINTS += 1;
                 delPoint(i, points);
             }
         }
 
+        char livesStatus[15];
         char pointsStatus[15];
-        sprintf(pointsStatus, "Points: %d", currPoints);
+        sprintf(pointsStatus, "Points: %d |", CPOINTS);
+        sprintf(livesStatus, "Lives: %d", LIVES);
 
-        // Printf points
-        SDL_Surface *textSurface = TTF_RenderText_Solid(font, pointsStatus, textColor);
-        SDL_Texture *textTexture = SDL_CreateTextureFromSurface(ren, textSurface);
-        SDL_Rect textRect = {.x = 0, .y = 0, .w = textSurface->w, .h = textSurface->h};
-        SDL_RenderCopy(ren, textTexture, NULL, &textRect);
+        // Printf points 
+        SDL_Surface *pointsTextSurface = TTF_RenderText_Solid(font, pointsStatus, textColor);
+        SDL_Texture *pointsTextTexture = SDL_CreateTextureFromSurface(ren, pointsTextSurface);
+        SDL_Rect pointsTextRect = {.x = 0, .y = 0, .w = pointsTextSurface->w, .h = pointsTextSurface->h};
+        SDL_RenderCopy(ren, pointsTextTexture, NULL, &pointsTextRect);
 
-        SDL_FreeSurface(textSurface);
-        SDL_DestroyTexture(textTexture);
+        // Printf lives
+        SDL_Surface *livesTextSurface = TTF_RenderText_Solid(font, livesStatus, textColor);
+        SDL_Texture *livesTextTexture = SDL_CreateTextureFromSurface(ren, livesTextSurface);
+        SDL_Rect livesTextRect = {.x = 140, .y = 0, .w = livesTextSurface->w, .h = livesTextSurface->h};
+        SDL_RenderCopy(ren, livesTextTexture, NULL, &livesTextRect);
+
+        SDL_FreeSurface(pointsTextSurface);
+        SDL_DestroyTexture(pointsTextTexture);
+        SDL_FreeSurface(livesTextSurface);
+        SDL_DestroyTexture(livesTextTexture);
 
         SDL_RenderPresent(ren);
     }
 
     sdl_playground_destroy(win, ren);
 
+    SDL_DestroyTexture(pacmanT);
+    for (int i = 0; i < 4; i++) {
+
+        SDL_DestroyTexture(ghostsTextures[i]);
+    }
 
     TTF_CloseFont(font);
     TTF_Quit();
@@ -462,6 +553,7 @@ int main() {
     free(specialPointsDraw);
     free(gSpawn);
     free(ghosts);
+    free(ghostsDraw);
     free(pacman);
     free(walls);
     free(wallsDraw);
