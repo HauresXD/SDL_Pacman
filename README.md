@@ -25,7 +25,7 @@ formát:
 - 12x16
 - ohraničení je vždy doplněno samo
 - tečky nahraďte sami
-  - pokud neurčíte spawn duchů, nebo pacmana vybere se automaticky (viz 'Důležité poznámky')
+  - pokud neurčíte spawn duchů, nebo pacmana vybere se automaticky (viz 'Možné znaky')
 - body se doplní automaticky
 - speciální body se doplní automaticky a náhodně
 
