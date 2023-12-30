@@ -267,6 +267,25 @@ int readFile(SDL_Renderer *ren, Wall *walls, Pacman *pman, GhostSpawn *gSpawn, S
     return id;
 }
 
+int readBestScore() {
+
+    FILE *bestSocre = fopen("../bestScore.txt", "rt");
+    char line[10];
+
+    fgets(line, sizeof(line), bestSocre);
+    fclose(bestSocre);
+
+    return atoi(line);
+}
+
+void writeBestScore(int new) {
+
+    FILE *bestScore = fopen("../bestScore.txt", "wt");
+
+    fprintf(bestScore, "%d", new);
+    fclose(bestScore);    
+}
+
 int main() {
 
     srand((unsigned int)time(NULL));
@@ -534,7 +553,6 @@ int main() {
 
         SDL_RenderPresent(ren);
     }
-
     sdl_playground_destroy(win, ren);
 
     SDL_DestroyTexture(pacmanT);
@@ -545,6 +563,12 @@ int main() {
 
     TTF_CloseFont(font);
     TTF_Quit();
+
+    int bestScore = readBestScore();
+    if(bestScore < CPOINTS) {
+
+        writeBestScore(CPOINTS);
+    }
 
     // Free & Return
     free(points);
