@@ -329,8 +329,6 @@ int main() {
         return -1;
     }
 
-
-
     // --- Pacman
     Pacman *pacman = (Pacman *)malloc(1 * sizeof(Pacman));
     // --- Walls
@@ -371,6 +369,9 @@ int main() {
 
     int CPOINTS = 0;
     int LIVES = 3;
+
+    int canKill = 0;
+    time_t startTime, endTime, elapsedTime;
 
     SDL_Event e;
     bool RUN = true;
@@ -499,7 +500,10 @@ int main() {
                     LIVES -= 1;
                     posX = origPosX;
                     posY = origPosY;
-                }// TADY ZABÍT DUCHA pokud .killable == 1
+                }else if(ghosts[i].killable == 1) {
+
+                    printf("KILL GHOST\n");
+                }
             }
         }
 
@@ -516,6 +520,12 @@ int main() {
             if(SDL_HasIntersection(&pacmanIG, &specialPointsDraw[i]) && specialPoints[i].skip != 1) {
 
                 delSpecialPoints(i, specialPoints);
+                canKill = 1;
+                for(int i = 0; i < 4; i++) {
+
+                    ghosts[i].killable = 1;
+                }
+                startTime = time(NULL);
             }
         }
 
@@ -550,6 +560,23 @@ int main() {
         SDL_DestroyTexture(pointsTextTexture);
         SDL_FreeSurface(livesTextSurface);
         SDL_DestroyTexture(livesTextTexture);
+
+        if(canKill == 1) {
+
+            endTime = time(NULL);
+            elapsedTime = endTime - startTime; 
+
+            if(elapsedTime > 5) {  
+
+                printf("END\n");
+                canKill = 0;
+                for(int i = 0; i < 4; i++) {
+                    
+                    ghosts[i].killable = 0;
+                }
+            }
+        }
+
 
         SDL_RenderPresent(ren);
     }
