@@ -25,7 +25,7 @@ formát:
 - 12x16
 - ohraničení je vždy doplněno samo
 - tečky nahraďte sami
-  - pokud neurčíte spawn duchů, nebo pacmana vybere se automaticky (viz 'Možné znaky')
+  - pokud neurčíte spawn duchů, nebo pacmana vybere se automaticky (viz [Možné znaky](#možné-znaky))
 - body se doplní automaticky
 - speciální body se doplní automaticky a náhodně
 
@@ -50,7 +50,7 @@ formát:
 - 'G' - spawn duchů
   - Default pozice - 1x1
 - 'P' - spawn pacmana
-  - Default pozice 10x10
+  - Default pozice - 10x10
 
 ---
 ### Důležité poznámky:
