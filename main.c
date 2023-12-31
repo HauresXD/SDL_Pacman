@@ -22,7 +22,7 @@ typedef struct {
     int h;
     int direction;
     int killable;
-    int contact;
+    int killed;
 } Ghost;
 
 typedef struct {
@@ -187,7 +187,7 @@ void drawGhosts(SDL_Renderer *renderer, SDL_Rect *ghostsD, Ghost *ghosts, SDL_Te
         ghostsD[i].h = DEF_SIZE;
 
         
-        if(ghosts[i].contact == 1 && ghosts[i].killable == 1) {
+        if(ghosts[i].killed == 1 && ghosts[i].killable == 1) {
 
         }else {
 
@@ -366,7 +366,7 @@ int main() {
         ghosts[i].w = i+1;
         ghosts[i].direction = 0;
         ghosts[i].killable = 0;
-        ghosts[i].contact = 0;
+        ghosts[i].killed = 0;
     }
 
     int numOfWalls = readFile(ren, walls, pacman, gSpawn, specialPoints, points);
@@ -518,12 +518,12 @@ int main() {
                     posY = origPosY;
                 }else if(ghosts[i].killable == 1) {
                     
-                    ghosts[i].contact = 1;
+                    ghosts[i].killed = 1;
                     if(time >= 5 * 23) { 
 
                         ghosts[i].killable = 0;
-                        ghosts[i].contact = 0;
-                        specialPointTimer = 0;
+                        ghosts[i].killed = 0;
+                        // specialPointTimer = 0;
                         // if(i == 0) {
 
                         //     ghost0Timer = 1;
