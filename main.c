@@ -187,7 +187,7 @@ void drawGhosts(SDL_Renderer *renderer, SDL_Rect *ghostsD, Ghost *ghosts, SDL_Te
         ghostsD[i].h = DEF_SIZE;
 
         
-        if(ghosts[i].killed == 1 && ghosts[i].killable == 1) {
+        if(ghosts[i].killed == 1) {
 
         }else {
 
@@ -337,6 +337,7 @@ int main() {
     }
     TTF_Font *font = TTF_OpenFont(FONT_PATH, FONT_SIZE);
     if(!font) {
+
         fprintf(stderr, "TTF_OpenFont: %s\n", TTF_GetError());
         return -1;
     }
@@ -389,6 +390,7 @@ int main() {
     int ghost1Timer = 0;
     int ghost2Timer = 0;
     int ghost3Timer = 0;
+
     SDL_Event e;
     bool RUN = true;
 
@@ -519,24 +521,56 @@ int main() {
                 }else if(ghosts[i].killable == 1) {
                     
                     ghosts[i].killed = 1;
+                    if(i == 0) {
+
+                        ghost0Timer = 0;
+                    }else if(i == 1) {
+
+                        ghost1Timer = 0;
+                    }else if(i == 2) {
+
+                        ghost2Timer = 0;
+                    }else if(i == 3) {
+
+                        ghost3Timer = 0;
+                    }
                     if(time >= 5 * 23) { 
 
                         ghosts[i].killable = 0;
+                    }
+
+                }
+            }
+        }
+
+        // Time ghost revival
+        for(int i = 0; i < 4; i++) {
+
+            if(ghosts[i].killed == 1) {
+
+                if(i == 0) {
+
+                    if(ghost0Timer > 5*23) {
+
                         ghosts[i].killed = 0;
-                        // specialPointTimer = 0;
-                        // if(i == 0) {
+                    }
+                }else if(i == 1) {
 
-                        //     ghost0Timer = 1;
-                        // }else if(i == 1) {
+                    if(ghost1Timer > 5*23) {
 
-                        //     ghost1Timer = 1;
-                        // }else if(i == 2) {
+                        ghosts[i].killed = 0;
+                    }
+                }else if(i == 2) {
 
-                        //     ghost2Timer = 1;
-                        // }else if(i == 3) {
+                    if(ghost2Timer > 5*23) {
 
-                        //     ghost3Timer = 1;
-                        // }    
+                        ghosts[i].killed = 0;
+                    }
+                }else if(i == 3) {
+
+                    if(ghost3Timer > 5*23) {
+
+                        ghosts[i].killed = 0;
                     }
                 }
             }
@@ -574,6 +608,7 @@ int main() {
             }
         }
 
+        // Make text
         char livesStatus[15];
         char pointsStatus[15];
         sprintf(pointsStatus, "Points: %d |", CPOINTS);
@@ -609,6 +644,11 @@ int main() {
         }
 
         time++;
+        ghost0Timer++;
+        ghost1Timer++;
+        ghost2Timer++;
+        ghost3Timer++;
+        // printf("0:, %d, 1: %d, 2: %d, 3: %d\n", ghost0Timer, ghost1Timer, ghost2Timer, ghost3Timer);
         SDL_RenderPresent(ren);
     }
     sdl_playground_destroy(win, ren);
