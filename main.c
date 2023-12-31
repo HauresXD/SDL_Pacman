@@ -22,6 +22,7 @@ typedef struct {
     int h;
     int direction;
     int killable;
+    int contact;
 } Ghost;
 
 typedef struct {
@@ -60,12 +61,12 @@ void drawGrid(SDL_Renderer *ren) {
 
     SDL_SetRenderDrawColor(ren, 255, 255, 255, 255);
 
-    for (int x = 0; x <= WINDOW_WIDTH; x += GRID_SIZE) {
+    for(int x = 0; x <= WINDOW_WIDTH; x += GRID_SIZE) {
 
         SDL_RenderDrawLine(ren, x, 0, x, WINDOW_HEIGHT);
     }
 
-    for (int y = 0; y <= WINDOW_HEIGHT; y += GRID_SIZE) {
+    for(int y = 0; y <= WINDOW_HEIGHT; y += GRID_SIZE) {
 
         SDL_RenderDrawLine(ren, 0, y, WINDOW_WIDTH, y);
     }
@@ -75,11 +76,11 @@ void drawWall(SDL_Renderer *renderer, int width, int height, int id, SDL_Rect *w
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 150, 255);
 
-    for (int w = 0; w < WINDOW_WIDTH; w += GRID_SIZE) {
+    for(int w = 0; w < WINDOW_WIDTH; w += GRID_SIZE) {
 
-        for (int h = 0; h < WINDOW_HEIGHT; h += GRID_SIZE) {
+        for(int h = 0; h < WINDOW_HEIGHT; h += GRID_SIZE) {
 
-            if (w / GRID_SIZE == width && h / GRID_SIZE == height) {
+            if(w / GRID_SIZE == width && h / GRID_SIZE == height) {
 
                 SDL_Rect rect = {.x = w, .y = h, .w = GRID_SIZE, .h = GRID_SIZE};
                 SDL_RenderFillRect(renderer, &rect);
@@ -93,11 +94,11 @@ void placeSpecialPoints(SDL_Renderer *renderer, int x, int y, int id, SDL_Rect *
 
     SDL_SetRenderDrawColor(renderer, 210, 124, 15, 255);
 
-    for (int w = 0; w < WINDOW_WIDTH; w += GRID_SIZE) {
+    for(int w = 0; w < WINDOW_WIDTH; w += GRID_SIZE) {
 
-        for (int h = 0; h < WINDOW_HEIGHT; h += GRID_SIZE) {
+        for(int h = 0; h < WINDOW_HEIGHT; h += GRID_SIZE) {
 
-            if (w / GRID_SIZE == x && h / GRID_SIZE == y) {
+            if(w / GRID_SIZE == x && h / GRID_SIZE == y) {
 
                 if(sPoints[id].skip != 1) {
 
@@ -114,11 +115,11 @@ void placePoints(SDL_Renderer *renderer, int x, int y, int id, SDL_Rect *pointsD
 
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
-    for (int w = 0; w < WINDOW_WIDTH; w += GRID_SIZE) {
+    for(int w = 0; w < WINDOW_WIDTH; w += GRID_SIZE) {
 
-        for (int h = 0; h < WINDOW_HEIGHT; h += GRID_SIZE) {
+        for(int h = 0; h < WINDOW_HEIGHT; h += GRID_SIZE) {
 
-            if (w / GRID_SIZE == x && h / GRID_SIZE == y) {
+            if(w / GRID_SIZE == x && h / GRID_SIZE == y) {
 
                 if(points[id].skip != 1) {
 
@@ -134,9 +135,9 @@ void placePoints(SDL_Renderer *renderer, int x, int y, int id, SDL_Rect *pointsD
 void delPoint(int id, Point *points) {
 
     int num = 192;
-    for (int i = 0; i < num; i++) {
+    for(int i = 0; i < num; i++) {
 
-        if (points[i].id == id) {
+        if(points[i].id == id) {
 
             points[i].skip = 1;
             break;
@@ -147,7 +148,7 @@ void delPoint(int id, Point *points) {
 void delSpecialPoints(int id, Special *sPoints) {
 
     int num = 4;
-    for (int i = 0; i < num; i++) {
+    for(int i = 0; i < num; i++) {
 
         if (sPoints[i].id == id) {
 
@@ -159,16 +160,24 @@ void delSpecialPoints(int id, Special *sPoints) {
 
 void drawGhosts(SDL_Renderer *renderer, SDL_Rect *ghostsD, Ghost *ghosts, SDL_Texture *ghostsT[]) {
 
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
     for(int i = 0; i < 4; i++) {
 
         char path[25];
-        sprintf(path, "../imgs/ghost_%d.png", i);
+
+        if(ghosts[i].killable == 0) {
+
+            sprintf(path, "../imgs/ghost_%d.png", i);
+        }else {
+
+            strcpy(path, "../imgs/ghost_kill.png");
+        }
 
         ghostsT[i] = IMG_LoadTexture(renderer, path);
 
-        if (!ghostsT[i]) {
+        if(!ghostsT[i]) {
+
             fprintf(stderr, "Nejde načíst obrázek pro ducha %d: %s\n", i, SDL_GetError());
         }
 
@@ -177,9 +186,14 @@ void drawGhosts(SDL_Renderer *renderer, SDL_Rect *ghostsD, Ghost *ghosts, SDL_Te
         ghostsD[i].w = DEF_SIZE;
         ghostsD[i].h = DEF_SIZE;
 
-        SDL_RenderCopy(renderer, ghostsT[i], NULL, &ghostsD[i]);
-    }
+        
+        if(ghosts[i].contact == 1 && ghosts[i].killable == 1) {
 
+        }else {
+
+            SDL_RenderCopy(renderer, ghostsT[i], NULL, &ghostsD[i]);
+        }
+    }
 }
 
 int readFile(SDL_Renderer *ren, Wall *walls, Pacman *pman, GhostSpawn *gSpawn, Special *sPoints, Point *points) {
@@ -315,16 +329,14 @@ int main() {
         return -1;
     }
 
-    // Ghost texture check
-
     // Font load check
-    if (TTF_Init() == -1) {
+    if(TTF_Init() == -1) {
 
         fprintf(stderr, "TTF_Init: %s\n", TTF_GetError());
         return -1;
     }
     TTF_Font *font = TTF_OpenFont(FONT_PATH, FONT_SIZE);
-    if (!font) {
+    if(!font) {
         fprintf(stderr, "TTF_OpenFont: %s\n", TTF_GetError());
         return -1;
     }
@@ -354,6 +366,7 @@ int main() {
         ghosts[i].w = i+1;
         ghosts[i].direction = 0;
         ghosts[i].killable = 0;
+        ghosts[i].contact = 0;
     }
 
     int numOfWalls = readFile(ren, walls, pacman, gSpawn, specialPoints, points);
@@ -371,14 +384,17 @@ int main() {
     int LIVES = 3;
 
     int canKill = 0;
-    time_t startTime, endTime, elapsedTime;
-
+    int time = 0;
+    int ghost0Timer = 0;
+    int ghost1Timer = 0;
+    int ghost2Timer = 0;
+    int ghost3Timer = 0;
     SDL_Event e;
     bool RUN = true;
 
     while(RUN) {
 
-        while (SDL_PollEvent(&e)) {
+        while(SDL_PollEvent(&e)) {
 
             if (e.type == SDL_QUIT) {
 
@@ -496,13 +512,32 @@ int main() {
             if(SDL_HasIntersection(&pacmanIG, &ghostsDraw[i])) {
 
                 if(ghosts[i].killable == 0) {
-
+                    
                     LIVES -= 1;
                     posX = origPosX;
                     posY = origPosY;
                 }else if(ghosts[i].killable == 1) {
+                    
+                    ghosts[i].contact = 1;
+                    if(time >= 5 * 23) { 
 
-                    printf("KILL GHOST\n");
+                        ghosts[i].killable = 0;
+                        ghosts[i].contact = 0;
+                        specialPointTimer = 0;
+                        // if(i == 0) {
+
+                        //     ghost0Timer = 1;
+                        // }else if(i == 1) {
+
+                        //     ghost1Timer = 1;
+                        // }else if(i == 2) {
+
+                        //     ghost2Timer = 1;
+                        // }else if(i == 3) {
+
+                        //     ghost3Timer = 1;
+                        // }    
+                    }
                 }
             }
         }
@@ -525,7 +560,7 @@ int main() {
 
                     ghosts[i].killable = 1;
                 }
-                startTime = time(NULL);
+                time = 0;
             }
         }
 
@@ -563,12 +598,8 @@ int main() {
 
         if(canKill == 1) {
 
-            endTime = time(NULL);
-            elapsedTime = endTime - startTime; 
+            if(time > 5*23) {  
 
-            if(elapsedTime > 5) {  
-
-                printf("END\n");
                 canKill = 0;
                 for(int i = 0; i < 4; i++) {
                     
@@ -577,7 +608,7 @@ int main() {
             }
         }
 
-
+        time++;
         SDL_RenderPresent(ren);
     }
     sdl_playground_destroy(win, ren);
