@@ -11,7 +11,7 @@ find_package(SDL2)
 
 # Vytvoření programu s názvem `hra`
 # Program se bude skládat ze dvou zadaných zdrojových souborů (jednotek překladu)
-add_executable(main main.c sdl_playground.c array.c)
+add_executable(main main.c sdl_playground.c)
 
 # Přidání adresářů s hlavičkovými soubory k programu (obdoba -I)
 target_include_directories(main PRIVATE ${SDL2_INCLUDE_DIRS})

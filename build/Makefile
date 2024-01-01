@@ -129,30 +129,6 @@ main/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/build
 .PHONY : main/fast
 
-array.o: array.c.o
-.PHONY : array.o
-
-# target to build an object file
-array.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/array.c.o
-.PHONY : array.c.o
-
-array.i: array.c.i
-.PHONY : array.i
-
-# target to preprocess a source file
-array.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/array.c.i
-.PHONY : array.c.i
-
-array.s: array.c.s
-.PHONY : array.s
-
-# target to generate assembly for a file
-array.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/array.c.s
-.PHONY : array.c.s
-
 main.o: main.c.o
 .PHONY : main.o
 
@@ -210,9 +186,6 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... main"
-	@echo "... array.o"
-	@echo "... array.i"
-	@echo "... array.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

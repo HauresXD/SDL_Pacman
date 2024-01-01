@@ -23,7 +23,6 @@ rozjeďte v: build/:
 formát: 
 
 - 12x16
-- ohraničení je vždy doplněno samo
 - tečky nahraďte sami
   - pokud neurčíte spawn duchů, nebo pacmana vybere se automaticky (viz [Možné znaky](#možné-znaky))
 - body se doplní automaticky

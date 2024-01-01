@@ -6,8 +6,6 @@
 #include <time.h>
 
 #include "sdl_playground.h"
-// #include "array.h" // ?????? Asi není potřeba
-
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
@@ -132,10 +130,9 @@ void placePoints(SDL_Renderer *renderer, int x, int y, int id, SDL_Rect *pointsD
     }
 }
 
-void delPoint(int id, Point *points) {
+void delPoint(int id, Point *points, int numOfWalls) {
 
-    int num = 192;
-    for(int i = 0; i < num; i++) {
+    for(int i = 0; i < numOfWalls; i++) {
 
         if(points[i].id == id) {
 
@@ -192,6 +189,133 @@ void drawGhosts(SDL_Renderer *renderer, SDL_Rect *ghostsD, Ghost *ghosts, SDL_Te
         }else {
 
             SDL_RenderCopy(renderer, ghostsT[i], NULL, &ghostsD[i]);
+        }
+    }
+}
+
+void ghostMovement(Ghost *ghosts, Wall *walls, int numWalls, int pacmanX, int pacmanY, int i, GhostSpawn gSpawn) {
+
+    if(ghosts[i].killed == 0) {
+
+        int dx = pacmanX - ghosts[i].w;
+        int dy = pacmanY - ghosts[i].h;
+
+        // Zjišťuje kudy má jít
+        if(abs(dx) > abs(dy)) {
+
+            if(dx > 0) {
+
+                if(!checkWallCollision(ghosts[i].w + 1, ghosts[i].h, walls, numWalls)) {
+
+                    ghosts[i].w += 1;
+                }else{
+                    
+                    int randomDirection;
+                    do{
+                        
+                        randomDirection = rand() % 4;
+                    }while(checkWallCollision(ghosts[i].w + (randomDirection == 0) - (randomDirection == 2),
+                                               ghosts[i].h + (randomDirection == 1) - (randomDirection == 3), walls,
+                                               numWalls));
+
+                    ghosts[i].w += (randomDirection == 0) - (randomDirection == 2);
+                    ghosts[i].h += (randomDirection == 1) - (randomDirection == 3);
+                }
+            }else {
+
+                if(!checkWallCollision(ghosts[i].w - 1, ghosts[i].h, walls, numWalls)) {
+
+                    ghosts[i].w -= 1;
+                }else {
+                    int randomDirection;
+                    do{
+
+                        randomDirection = rand() % 4;
+                    }while(checkWallCollision(ghosts[i].w + (randomDirection == 0) - (randomDirection == 2),
+                                               ghosts[i].h + (randomDirection == 1) - (randomDirection == 3), walls,
+                                               numWalls));
+
+                    ghosts[i].w += (randomDirection == 0) - (randomDirection == 2);
+                    ghosts[i].h += (randomDirection == 1) - (randomDirection == 3);
+                }
+            }
+        }else {
+
+            if(dy > 0) {
+
+                if(!checkWallCollision(ghosts[i].w, ghosts[i].h + 1, walls, numWalls)) {
+
+                    ghosts[i].h += 1;
+                }else {
+
+                    int randomDirection;
+                    do {
+
+                        randomDirection = rand() % 4;
+                    } while(checkWallCollision(ghosts[i].w + (randomDirection == 0) - (randomDirection == 2),
+                                               ghosts[i].h + (randomDirection == 1) - (randomDirection == 3), walls,
+                                               numWalls));
+                                               
+                    ghosts[i].w += (randomDirection == 0) - (randomDirection == 2);
+                    ghosts[i].h += (randomDirection == 1) - (randomDirection == 3);
+                }
+            }else {
+
+                if(!checkWallCollision(ghosts[i].w, ghosts[i].h - 1, walls, numWalls)) {
+
+                    ghosts[i].h -= 1;
+                }else {
+
+                    int randomDirection;
+                    do {
+
+                        randomDirection = rand() % 4;
+                    } while (checkWallCollision(ghosts[i].w + (randomDirection == 0) - (randomDirection == 2),
+                                               ghosts[i].h + (randomDirection == 1) - (randomDirection == 3), walls,
+                                               numWalls));
+
+                    ghosts[i].w += (randomDirection == 0) - (randomDirection == 2);
+                    ghosts[i].h += (randomDirection == 1) - (randomDirection == 3);
+                }
+            }
+        }
+    }else {
+
+        ghosts[i].w = gSpawn.w;
+        ghosts[i].h = gSpawn.h;
+        ghosts[i].killed = 0;
+        ghosts[i].killable = 0;
+    }
+}
+
+int checkWallCollision(int x, int y, Wall *walls, int numWalls) {
+
+    for(int i = 0; i < numWalls; i++) {
+
+        if(x == walls[i].w && y == walls[i].h) {
+
+            return 1; 
+        }
+    }
+    return 0;
+}
+
+void moveGhosts(Ghost *ghosts, Wall *walls, int numWalls, int pacmanX, int pacmanY, int frame, GhostSpawn gSpawn) {
+    
+    for(int i = 0; i < 4; i++) {
+
+        if(i == 0 && frame % 15 == 0) {
+
+            ghostMovement(ghosts, walls, numWalls, pacmanX, pacmanY, 0, gSpawn);
+        }else if (i == 1 && frame % 18 == 0) {
+
+            ghostMovement(ghosts, walls, numWalls, pacmanX, pacmanY, 1, gSpawn);
+        }else if (i == 2 && frame % 12 == 0) {
+            
+            ghostMovement(ghosts, walls, numWalls, pacmanX, pacmanY, 2, gSpawn);
+        }else if (i == 3 && frame % 20 == 0) {
+            
+            ghostMovement(ghosts, walls, numWalls, pacmanX, pacmanY, 3, gSpawn);
         }
     }
 }
@@ -360,17 +484,17 @@ int main() {
     Special *specialPoints = (Special *)malloc(4 * sizeof(Special));
     SDL_Rect *specialPointsDraw = (SDL_Rect *)malloc(4 * sizeof(SDL_Rect));
 
+    int numOfWalls = readFile(ren, walls, pacman, gSpawn, specialPoints, points);
+
     for(int i = 0; i < 4; i++) {
 
         ghosts[i].id = i;
-        ghosts[i].h = i+1;
-        ghosts[i].w = i+1;
+        ghosts[i].h = gSpawn->h;
+        ghosts[i].w = gSpawn->w;
         ghosts[i].direction = 0;
         ghosts[i].killable = 0;
         ghosts[i].killed = 0;
     }
-
-    int numOfWalls = readFile(ren, walls, pacman, gSpawn, specialPoints, points);
 
     int posX = pacman->w*DEF_SIZE;
     int posY = pacman->h*DEF_SIZE;
@@ -390,6 +514,7 @@ int main() {
     int ghost1Timer = 0;
     int ghost2Timer = 0;
     int ghost3Timer = 0;
+    int ghostsMove = 0;
 
     SDL_Event e;
     bool RUN = true;
@@ -450,6 +575,9 @@ int main() {
         SDL_RenderClear(ren);
         drawGrid(ren);
 
+        // Ghost Movement
+        moveGhosts(ghosts, walls, numOfWalls, posX/DEF_SIZE, posY/DEF_SIZE, ghostsMove, *gSpawn);
+
         // Draw walls
         for(int i = 0; i < numOfWalls; i++) {
 
@@ -463,7 +591,7 @@ int main() {
         }
 
         // Draw points
-        for(int i = 0; i < 192; i++) {
+        for(int i = 0; i < 192-numOfWalls; i++) {
 
             placePoints(ren, points[i].x, points[i].y, i, pointsDraw, points);
         }
@@ -518,6 +646,11 @@ int main() {
                     LIVES -= 1;
                     posX = origPosX;
                     posY = origPosY;
+                    for(int i = 0; i < 4; i++) {
+
+                        ghosts[i].w = gSpawn->w;
+                        ghosts[i].h = gSpawn->h;
+                    }
                 }else if(ghosts[i].killable == 1) {
                     
                     ghosts[i].killed = 1;
@@ -599,12 +732,12 @@ int main() {
         }
 
         // Collect Points
-        for(int i = 0; i < 192; i++) {
+        for(int i = 0; i < 192-numOfWalls; i++) {
 
             if(SDL_HasIntersection(&pacmanIG, &pointsDraw[i]) && points[i].skip != 1) {
 
                 CPOINTS += 1;
-                delPoint(i, points);
+                delPoint(i, points, 192-numOfWalls);
             }
         }
 
@@ -648,7 +781,7 @@ int main() {
         ghost1Timer++;
         ghost2Timer++;
         ghost3Timer++;
-        // printf("0:, %d, 1: %d, 2: %d, 3: %d\n", ghost0Timer, ghost1Timer, ghost2Timer, ghost3Timer);
+        ghostsMove++;
         SDL_RenderPresent(ren);
     }
     sdl_playground_destroy(win, ren);
