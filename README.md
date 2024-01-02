@@ -52,9 +52,9 @@ formát:
 ### Možné znaky:
 - '#' - zeď
 - 'G' - spawn duchů
-  - Default pozice - 1x1
-- 'P' - spawn pacmana
   - Default pozice - 10x10
+- 'P' - spawn pacmana
+  - Default pozice - 1x1
 
 ---
 ### Důležité poznámky:
