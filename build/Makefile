@@ -129,6 +129,54 @@ main/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/build
 .PHONY : main/fast
 
+files.o: files.c.o
+.PHONY : files.o
+
+# target to build an object file
+files.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/files.c.o
+.PHONY : files.c.o
+
+files.i: files.c.i
+.PHONY : files.i
+
+# target to preprocess a source file
+files.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/files.c.i
+.PHONY : files.c.i
+
+files.s: files.c.s
+.PHONY : files.s
+
+# target to generate assembly for a file
+files.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/files.c.s
+.PHONY : files.c.s
+
+ghosts.o: ghosts.c.o
+.PHONY : ghosts.o
+
+# target to build an object file
+ghosts.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/ghosts.c.o
+.PHONY : ghosts.c.o
+
+ghosts.i: ghosts.c.i
+.PHONY : ghosts.i
+
+# target to preprocess a source file
+ghosts.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/ghosts.c.i
+.PHONY : ghosts.c.i
+
+ghosts.s: ghosts.c.s
+.PHONY : ghosts.s
+
+# target to generate assembly for a file
+ghosts.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/ghosts.c.s
+.PHONY : ghosts.c.s
+
 main.o: main.c.o
 .PHONY : main.o
 
@@ -152,6 +200,54 @@ main.s: main.c.s
 main.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/main.c.s
 .PHONY : main.c.s
+
+points.o: points.c.o
+.PHONY : points.o
+
+# target to build an object file
+points.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/points.c.o
+.PHONY : points.c.o
+
+points.i: points.c.i
+.PHONY : points.i
+
+# target to preprocess a source file
+points.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/points.c.i
+.PHONY : points.c.i
+
+points.s: points.c.s
+.PHONY : points.s
+
+# target to generate assembly for a file
+points.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/points.c.s
+.PHONY : points.c.s
+
+screens.o: screens.c.o
+.PHONY : screens.o
+
+# target to build an object file
+screens.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/screens.c.o
+.PHONY : screens.c.o
+
+screens.i: screens.c.i
+.PHONY : screens.i
+
+# target to preprocess a source file
+screens.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/screens.c.i
+.PHONY : screens.c.i
+
+screens.s: screens.c.s
+.PHONY : screens.s
+
+# target to generate assembly for a file
+screens.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/screens.c.s
+.PHONY : screens.c.s
 
 sdl_playground.o: sdl_playground.c.o
 .PHONY : sdl_playground.o
@@ -177,6 +273,30 @@ sdl_playground.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/sdl_playground.c.s
 .PHONY : sdl_playground.c.s
 
+walls.o: walls.c.o
+.PHONY : walls.o
+
+# target to build an object file
+walls.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/walls.c.o
+.PHONY : walls.c.o
+
+walls.i: walls.c.i
+.PHONY : walls.i
+
+# target to preprocess a source file
+walls.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/walls.c.i
+.PHONY : walls.c.i
+
+walls.s: walls.c.s
+.PHONY : walls.s
+
+# target to generate assembly for a file
+walls.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/walls.c.s
+.PHONY : walls.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -186,12 +306,27 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... main"
+	@echo "... files.o"
+	@echo "... files.i"
+	@echo "... files.s"
+	@echo "... ghosts.o"
+	@echo "... ghosts.i"
+	@echo "... ghosts.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... points.o"
+	@echo "... points.i"
+	@echo "... points.s"
+	@echo "... screens.o"
+	@echo "... screens.i"
+	@echo "... screens.s"
 	@echo "... sdl_playground.o"
 	@echo "... sdl_playground.i"
 	@echo "... sdl_playground.s"
+	@echo "... walls.o"
+	@echo "... walls.i"
+	@echo "... walls.s"
 .PHONY : help
 
 

@@ -1,7 +1,7 @@
-CMakeFiles/main.dir/main.c.o: /home/haures/Desktop/SDL_Pacman/main.c \
- /usr/include/stdc-predef.h /usr/include/SDL2/SDL.h \
- /usr/include/SDL2/SDL_main.h /usr/include/SDL2/SDL_stdinc.h \
- /usr/include/SDL2/SDL_config.h \
+CMakeFiles/main.dir/points.c.o: /home/haures/Desktop/SDL_Pacman/points.c \
+ /usr/include/stdc-predef.h /home/haures/Desktop/SDL_Pacman/points.h \
+ /usr/include/SDL2/SDL.h /usr/include/SDL2/SDL_main.h \
+ /usr/include/SDL2/SDL_stdinc.h /usr/include/SDL2/SDL_config.h \
  /usr/include/x86_64-linux-gnu/SDL2/_real_SDL_config.h \
  /usr/include/SDL2/SDL_platform.h /usr/include/SDL2/begin_code.h \
  /usr/include/SDL2/close_code.h /usr/include/x86_64-linux-gnu/sys/types.h \
@@ -182,10 +182,4 @@ CMakeFiles/main.dir/main.c.o: /home/haures/Desktop/SDL_Pacman/main.c \
  /usr/include/time.h /usr/include/x86_64-linux-gnu/bits/time.h \
  /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
  /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
- /home/haures/Desktop/SDL_Pacman/structs.h \
- /home/haures/Desktop/SDL_Pacman/sdl_playground.h \
- /home/haures/Desktop/SDL_Pacman/ghosts.h \
- /home/haures/Desktop/SDL_Pacman/points.h \
- /home/haures/Desktop/SDL_Pacman/walls.h \
- /home/haures/Desktop/SDL_Pacman/files.h \
- /home/haures/Desktop/SDL_Pacman/screens.h
+ /home/haures/Desktop/SDL_Pacman/structs.h

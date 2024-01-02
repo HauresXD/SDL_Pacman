@@ -5,7 +5,13 @@
 #include <assert.h>
 #include <time.h>
 
+#include "structs.h"
 #include "sdl_playground.h"
+#include "ghosts.h"
+#include "points.h"
+#include "walls.h"
+#include "files.h"
+#include "screens.h"
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
@@ -13,416 +19,6 @@
 #define GRID_SIZE 50
 #define FONT_PATH "../arial.ttf"
 #define FONT_SIZE 24
-
-typedef struct {
-    int id;
-    int w;
-    int h;
-    int direction;
-    int killable;
-    int killed;
-} Ghost;
-
-typedef struct {
-    int w;
-    int h;
-} GhostSpawn;
-
-typedef struct {
-    int w;
-    int h;
-    int id;
-} Wall;
-
-typedef struct {
-    int w;
-    int h;
-    int id;
-    int direction;
-} Pacman;
-
-typedef struct {
-    int x;
-    int y;
-    int id;
-    int skip;
-} Point;
-
-typedef struct {
-    int x;
-    int y;
-    int id;
-    int skip;
-}Special;
-
-void drawGrid(SDL_Renderer *ren) {
-
-    SDL_SetRenderDrawColor(ren, 255, 255, 255, 255);
-
-    for(int x = 0; x <= WINDOW_WIDTH; x += GRID_SIZE) {
-
-        SDL_RenderDrawLine(ren, x, 0, x, WINDOW_HEIGHT);
-    }
-
-    for(int y = 0; y <= WINDOW_HEIGHT; y += GRID_SIZE) {
-
-        SDL_RenderDrawLine(ren, 0, y, WINDOW_WIDTH, y);
-    }
-}
-
-void drawWall(SDL_Renderer *renderer, int width, int height, int id, SDL_Rect *walls) {
-
-    SDL_SetRenderDrawColor(renderer, 0, 0, 150, 255);
-
-    for(int w = 0; w < WINDOW_WIDTH; w += GRID_SIZE) {
-
-        for(int h = 0; h < WINDOW_HEIGHT; h += GRID_SIZE) {
-
-            if(w / GRID_SIZE == width && h / GRID_SIZE == height) {
-
-                SDL_Rect rect = {.x = w, .y = h, .w = GRID_SIZE, .h = GRID_SIZE};
-                SDL_RenderFillRect(renderer, &rect);
-                walls[id] = rect;
-            }
-        }
-    }
-}
-
-void placeSpecialPoints(SDL_Renderer *renderer, int x, int y, int id, SDL_Rect *sPointsD, Special *sPoints) {
-
-    SDL_SetRenderDrawColor(renderer, 210, 124, 15, 255);
-
-    for(int w = 0; w < WINDOW_WIDTH; w += GRID_SIZE) {
-
-        for(int h = 0; h < WINDOW_HEIGHT; h += GRID_SIZE) {
-
-            if(w / GRID_SIZE == x && h / GRID_SIZE == y) {
-
-                if(sPoints[id].skip != 1) {
-
-                    SDL_Rect rect = {.x = w+20, .y = h+20, .w = 10, .h = 10};
-                    SDL_RenderFillRect(renderer, &rect);
-                    sPointsD[id] = rect;
-                }
-            }
-        }
-    }
-}
-
-void placePoints(SDL_Renderer *renderer, int x, int y, int id, SDL_Rect *pointsD, Point *points) {
-
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-
-    for(int w = 0; w < WINDOW_WIDTH; w += GRID_SIZE) {
-
-        for(int h = 0; h < WINDOW_HEIGHT; h += GRID_SIZE) {
-
-            if(w / GRID_SIZE == x && h / GRID_SIZE == y) {
-
-                if(points[id].skip != 1) {
-
-                    SDL_Rect rect = {.x = w+22, .y = h+22, .w = 5, .h = 5};
-                    SDL_RenderFillRect(renderer, &rect);
-                    pointsD[id] = rect;
-                }
-            }
-        }
-    }
-}
-
-void delPoint(int id, Point *points, int numOfWalls) {
-
-    for(int i = 0; i < numOfWalls; i++) {
-
-        if(points[i].id == id) {
-
-            points[i].skip = 1;
-            break;
-        }
-    }
-}
-
-void delSpecialPoints(int id, Special *sPoints) {
-
-    int num = 4;
-    for(int i = 0; i < num; i++) {
-
-        if (sPoints[i].id == id) {
-
-            sPoints[i].skip = 1;
-            break;
-        }
-    }
-}
-
-void drawGhosts(SDL_Renderer *renderer, SDL_Rect *ghostsD, Ghost *ghosts, SDL_Texture *ghostsT[]) {
-
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-
-    for(int i = 0; i < 4; i++) {
-
-        char path[25];
-
-        if(ghosts[i].killable == 0) {
-
-            sprintf(path, "../imgs/ghost_%d.png", i);
-        }else {
-
-            strcpy(path, "../imgs/ghost_kill.png");
-        }
-
-        ghostsT[i] = IMG_LoadTexture(renderer, path);
-
-        if(!ghostsT[i]) {
-
-            fprintf(stderr, "Nejde načíst obrázek pro ducha %d: %s\n", i, SDL_GetError());
-        }
-
-        ghostsD[i].x = ghosts[i].w * DEF_SIZE;
-        ghostsD[i].y = ghosts[i].h * DEF_SIZE;
-        ghostsD[i].w = DEF_SIZE;
-        ghostsD[i].h = DEF_SIZE;
-
-        
-        if(ghosts[i].killed == 1) {
-
-        }else {
-
-            SDL_RenderCopy(renderer, ghostsT[i], NULL, &ghostsD[i]);
-        }
-    }
-}
-
-void ghostMovement(Ghost *ghosts, Wall *walls, int numWalls, int pacmanX, int pacmanY, int i, GhostSpawn gSpawn) {
-
-    if(ghosts[i].killed == 0) {
-
-        int dx = pacmanX - ghosts[i].w;
-        int dy = pacmanY - ghosts[i].h;
-
-        // Zjišťuje kudy má jít
-        if(abs(dx) > abs(dy)) {
-
-            if(dx > 0) {
-
-                if(!checkWallCollision(ghosts[i].w + 1, ghosts[i].h, walls, numWalls)) {
-
-                    ghosts[i].w += 1;
-                }else{
-                    
-                    int randomDirection;
-                    do{
-                        
-                        randomDirection = rand() % 4;
-                    }while(checkWallCollision(ghosts[i].w + (randomDirection == 0) - (randomDirection == 2),
-                                               ghosts[i].h + (randomDirection == 1) - (randomDirection == 3), walls,
-                                               numWalls));
-
-                    ghosts[i].w += (randomDirection == 0) - (randomDirection == 2);
-                    ghosts[i].h += (randomDirection == 1) - (randomDirection == 3);
-                }
-            }else {
-
-                if(!checkWallCollision(ghosts[i].w - 1, ghosts[i].h, walls, numWalls)) {
-
-                    ghosts[i].w -= 1;
-                }else {
-                    int randomDirection;
-                    do{
-
-                        randomDirection = rand() % 4;
-                    }while(checkWallCollision(ghosts[i].w + (randomDirection == 0) - (randomDirection == 2),
-                                               ghosts[i].h + (randomDirection == 1) - (randomDirection == 3), walls,
-                                               numWalls));
-
-                    ghosts[i].w += (randomDirection == 0) - (randomDirection == 2);
-                    ghosts[i].h += (randomDirection == 1) - (randomDirection == 3);
-                }
-            }
-        }else {
-
-            if(dy > 0) {
-
-                if(!checkWallCollision(ghosts[i].w, ghosts[i].h + 1, walls, numWalls)) {
-
-                    ghosts[i].h += 1;
-                }else {
-
-                    int randomDirection;
-                    do {
-
-                        randomDirection = rand() % 4;
-                    } while(checkWallCollision(ghosts[i].w + (randomDirection == 0) - (randomDirection == 2),
-                                               ghosts[i].h + (randomDirection == 1) - (randomDirection == 3), walls,
-                                               numWalls));
-                                               
-                    ghosts[i].w += (randomDirection == 0) - (randomDirection == 2);
-                    ghosts[i].h += (randomDirection == 1) - (randomDirection == 3);
-                }
-            }else {
-
-                if(!checkWallCollision(ghosts[i].w, ghosts[i].h - 1, walls, numWalls)) {
-
-                    ghosts[i].h -= 1;
-                }else {
-
-                    int randomDirection;
-                    do {
-
-                        randomDirection = rand() % 4;
-                    } while (checkWallCollision(ghosts[i].w + (randomDirection == 0) - (randomDirection == 2),
-                                               ghosts[i].h + (randomDirection == 1) - (randomDirection == 3), walls,
-                                               numWalls));
-
-                    ghosts[i].w += (randomDirection == 0) - (randomDirection == 2);
-                    ghosts[i].h += (randomDirection == 1) - (randomDirection == 3);
-                }
-            }
-        }
-    }else {
-
-        ghosts[i].w = gSpawn.w;
-        ghosts[i].h = gSpawn.h;
-        ghosts[i].killed = 0;
-        ghosts[i].killable = 0;
-    }
-}
-
-int checkWallCollision(int x, int y, Wall *walls, int numWalls) {
-
-    for(int i = 0; i < numWalls; i++) {
-
-        if(x == walls[i].w && y == walls[i].h) {
-
-            return 1; 
-        }
-    }
-    return 0;
-}
-
-void moveGhosts(Ghost *ghosts, Wall *walls, int numWalls, int pacmanX, int pacmanY, int frame, GhostSpawn gSpawn) {
-    
-    for(int i = 0; i < 4; i++) {
-
-        if(i == 0 && frame % 15 == 0) {
-
-            ghostMovement(ghosts, walls, numWalls, pacmanX, pacmanY, 0, gSpawn);
-        }else if (i == 1 && frame % 18 == 0) {
-
-            ghostMovement(ghosts, walls, numWalls, pacmanX, pacmanY, 1, gSpawn);
-        }else if (i == 2 && frame % 12 == 0) {
-            
-            ghostMovement(ghosts, walls, numWalls, pacmanX, pacmanY, 2, gSpawn);
-        }else if (i == 3 && frame % 20 == 0) {
-            
-            ghostMovement(ghosts, walls, numWalls, pacmanX, pacmanY, 3, gSpawn);
-        }
-    }
-}
-
-int readFile(SDL_Renderer *ren, Wall *walls, Pacman *pman, GhostSpawn *gSpawn, Special *sPoints, Point *points) {
-
-    FILE *file = fopen("../playground.txt", "rt");
-    if(file == NULL) {
-
-        printf("Nenašel se 'playground.txt'\n");
-        exit(1);
-    }
-
-    char line[20];
-    int id = 0;
-    int wasP = 0;
-    int wasG = 0;
-    int sPointCount = 0;
-    int pointsCount = 0;
-
-    // Načíst řádek
-    for(int i = 0; i < 12; i++) {
-
-        fgets(line, sizeof(line), file);
-
-        // Znak po znaku
-        for(int j = 0; j < 16; j++) {
-
-            // Přidání objektu
-            if(line[j] == '#') {
-
-                walls[id].w = j;
-                walls[id].h = i;
-                walls[id].id = id;
-
-                id += 1;
-            }else if(line[j] == 'P') {
-
-                pman->w = j;
-                pman->h = i;
-                pman->id = 0;
-                pman->direction = 0;
-
-                wasP = 1;
-            }else if(line[j] == 'G') {
-
-                gSpawn->w = j;
-                gSpawn->h = i;
-
-                wasG = 1;
-            }else {
-
-                int randint = rand() % 25;
-                if(randint > 22 && sPointCount < 4) {
-
-                    sPoints[sPointCount].x = j;
-                    sPoints[sPointCount].y = i;
-                    sPoints[sPointCount].id = sPointCount;
-
-                    sPointCount += 1;
-                }else {
-
-                    points[pointsCount].x = j;
-                    points[pointsCount].y = i;
-                    points[pointsCount].id = pointsCount;
-
-                    pointsCount += 1;
-                }
-            }
-        }
-
-        if(wasP == 0) {
-
-            pman->w = 1;
-            pman->h = 1;
-            pman->id = 0;
-            pman->direction = 0;
-        }
-        if(wasG == 0) {
-
-            gSpawn->w = 10;
-            gSpawn->h = 10;
-        }
-    }
-    fclose(file);
-
-    return id;
-}
-
-int readBestScore() {
-
-    FILE *bestSocre = fopen("../bestScore.txt", "rt");
-    char line[10];
-
-    fgets(line, sizeof(line), bestSocre);
-    fclose(bestSocre);
-
-    return atoi(line);
-}
-
-void writeBestScore(int new) {
-
-    FILE *bestScore = fopen("../bestScore.txt", "wt");
-
-    fprintf(bestScore, "%d", new);
-    fclose(bestScore);    
-}
 
 int main() {
 
@@ -573,10 +169,9 @@ int main() {
 
         SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
         SDL_RenderClear(ren);
-        drawGrid(ren);
 
         // Ghost Movement
-        moveGhosts(ghosts, walls, numOfWalls, posX/DEF_SIZE, posY/DEF_SIZE, ghostsMove, *gSpawn);
+        // moveGhosts(ghosts, walls, numOfWalls, posX/DEF_SIZE, posY/DEF_SIZE, ghostsMove, *gSpawn);
 
         // Draw walls
         for(int i = 0; i < numOfWalls; i++) {
@@ -712,7 +307,7 @@ int main() {
         // LIVES check
         if(LIVES <= 0) {
 
-            printf("THE END\n");
+            losingScreen(ren, CPOINTS);
             RUN = 0;
         }
 
@@ -738,6 +333,10 @@ int main() {
 
                 CPOINTS += 1;
                 delPoint(i, points, 192-numOfWalls);
+            }
+            if(CPOINTS == 192-6-numOfWalls) {
+
+                winningScreen(ren);
             }
         }
 

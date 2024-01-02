@@ -1,3 +1,2 @@
-- Pohybující se duchové
 - Úvodní stránka
-- Stránka nastavení 
+- Zjistit počet Special a dát to if-u pro winningScreen --> if(CPOINTS == (192-numOfWalls-numOfSpecials)) { ...

@@ -97,19 +97,99 @@ CMakeFiles/main.dir/sdl_playground.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/main.dir/sdl_playground.c.s"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/haures/Desktop/SDL_Pacman/sdl_playground.c -o CMakeFiles/main.dir/sdl_playground.c.s
 
+CMakeFiles/main.dir/ghosts.c.o: CMakeFiles/main.dir/flags.make
+CMakeFiles/main.dir/ghosts.c.o: /home/haures/Desktop/SDL_Pacman/ghosts.c
+CMakeFiles/main.dir/ghosts.c.o: CMakeFiles/main.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/haures/Desktop/SDL_Pacman/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/main.dir/ghosts.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/main.dir/ghosts.c.o -MF CMakeFiles/main.dir/ghosts.c.o.d -o CMakeFiles/main.dir/ghosts.c.o -c /home/haures/Desktop/SDL_Pacman/ghosts.c
+
+CMakeFiles/main.dir/ghosts.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/main.dir/ghosts.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/haures/Desktop/SDL_Pacman/ghosts.c > CMakeFiles/main.dir/ghosts.c.i
+
+CMakeFiles/main.dir/ghosts.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/main.dir/ghosts.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/haures/Desktop/SDL_Pacman/ghosts.c -o CMakeFiles/main.dir/ghosts.c.s
+
+CMakeFiles/main.dir/points.c.o: CMakeFiles/main.dir/flags.make
+CMakeFiles/main.dir/points.c.o: /home/haures/Desktop/SDL_Pacman/points.c
+CMakeFiles/main.dir/points.c.o: CMakeFiles/main.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/haures/Desktop/SDL_Pacman/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/main.dir/points.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/main.dir/points.c.o -MF CMakeFiles/main.dir/points.c.o.d -o CMakeFiles/main.dir/points.c.o -c /home/haures/Desktop/SDL_Pacman/points.c
+
+CMakeFiles/main.dir/points.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/main.dir/points.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/haures/Desktop/SDL_Pacman/points.c > CMakeFiles/main.dir/points.c.i
+
+CMakeFiles/main.dir/points.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/main.dir/points.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/haures/Desktop/SDL_Pacman/points.c -o CMakeFiles/main.dir/points.c.s
+
+CMakeFiles/main.dir/walls.c.o: CMakeFiles/main.dir/flags.make
+CMakeFiles/main.dir/walls.c.o: /home/haures/Desktop/SDL_Pacman/walls.c
+CMakeFiles/main.dir/walls.c.o: CMakeFiles/main.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/haures/Desktop/SDL_Pacman/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building C object CMakeFiles/main.dir/walls.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/main.dir/walls.c.o -MF CMakeFiles/main.dir/walls.c.o.d -o CMakeFiles/main.dir/walls.c.o -c /home/haures/Desktop/SDL_Pacman/walls.c
+
+CMakeFiles/main.dir/walls.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/main.dir/walls.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/haures/Desktop/SDL_Pacman/walls.c > CMakeFiles/main.dir/walls.c.i
+
+CMakeFiles/main.dir/walls.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/main.dir/walls.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/haures/Desktop/SDL_Pacman/walls.c -o CMakeFiles/main.dir/walls.c.s
+
+CMakeFiles/main.dir/files.c.o: CMakeFiles/main.dir/flags.make
+CMakeFiles/main.dir/files.c.o: /home/haures/Desktop/SDL_Pacman/files.c
+CMakeFiles/main.dir/files.c.o: CMakeFiles/main.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/haures/Desktop/SDL_Pacman/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building C object CMakeFiles/main.dir/files.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/main.dir/files.c.o -MF CMakeFiles/main.dir/files.c.o.d -o CMakeFiles/main.dir/files.c.o -c /home/haures/Desktop/SDL_Pacman/files.c
+
+CMakeFiles/main.dir/files.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/main.dir/files.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/haures/Desktop/SDL_Pacman/files.c > CMakeFiles/main.dir/files.c.i
+
+CMakeFiles/main.dir/files.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/main.dir/files.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/haures/Desktop/SDL_Pacman/files.c -o CMakeFiles/main.dir/files.c.s
+
+CMakeFiles/main.dir/screens.c.o: CMakeFiles/main.dir/flags.make
+CMakeFiles/main.dir/screens.c.o: /home/haures/Desktop/SDL_Pacman/screens.c
+CMakeFiles/main.dir/screens.c.o: CMakeFiles/main.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/haures/Desktop/SDL_Pacman/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building C object CMakeFiles/main.dir/screens.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/main.dir/screens.c.o -MF CMakeFiles/main.dir/screens.c.o.d -o CMakeFiles/main.dir/screens.c.o -c /home/haures/Desktop/SDL_Pacman/screens.c
+
+CMakeFiles/main.dir/screens.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/main.dir/screens.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/haures/Desktop/SDL_Pacman/screens.c > CMakeFiles/main.dir/screens.c.i
+
+CMakeFiles/main.dir/screens.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/main.dir/screens.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/haures/Desktop/SDL_Pacman/screens.c -o CMakeFiles/main.dir/screens.c.s
+
 # Object files for target main
 main_OBJECTS = \
 "CMakeFiles/main.dir/main.c.o" \
-"CMakeFiles/main.dir/sdl_playground.c.o"
+"CMakeFiles/main.dir/sdl_playground.c.o" \
+"CMakeFiles/main.dir/ghosts.c.o" \
+"CMakeFiles/main.dir/points.c.o" \
+"CMakeFiles/main.dir/walls.c.o" \
+"CMakeFiles/main.dir/files.c.o" \
+"CMakeFiles/main.dir/screens.c.o"
 
 # External object files for target main
 main_EXTERNAL_OBJECTS =
 
 main: CMakeFiles/main.dir/main.c.o
 main: CMakeFiles/main.dir/sdl_playground.c.o
+main: CMakeFiles/main.dir/ghosts.c.o
+main: CMakeFiles/main.dir/points.c.o
+main: CMakeFiles/main.dir/walls.c.o
+main: CMakeFiles/main.dir/files.c.o
+main: CMakeFiles/main.dir/screens.c.o
 main: CMakeFiles/main.dir/build.make
 main: CMakeFiles/main.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/haures/Desktop/SDL_Pacman/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking C executable main"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/haures/Desktop/SDL_Pacman/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking C executable main"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/main.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

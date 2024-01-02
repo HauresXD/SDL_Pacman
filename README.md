@@ -21,9 +21,9 @@ rozjeďte v: build/:
 ### Mapa ze souboru:
 
 formát: 
-
+- v souboru [map](map.txt)
 - 12x16
-- tečky nahraďte sami
+- tečky nahraďte sami (nebo nenahrazujte)
   - pokud neurčíte spawn duchů, nebo pacmana vybere se automaticky (viz [Možné znaky](#možné-znaky))
 - body se doplní automaticky
 - speciální body se doplní automaticky a náhodně
