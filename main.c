@@ -62,6 +62,21 @@ int main() {
         return -1;
     }
 
+    int bestScore = readBestScore();
+
+    // Render menu
+    int menuResult = mainMenu(ren, font, bestScore);
+    if(menuResult != 0) {
+        
+        sdl_playground_destroy(win, ren);
+
+        SDL_DestroyTexture(pacmanT);
+        TTF_CloseFont(font);
+        TTF_Quit();
+
+        return -1;
+    }
+
     // --- Pacman
     Pacman *pacman = (Pacman *)malloc(1 * sizeof(Pacman));
     // --- Walls
@@ -114,7 +129,6 @@ int main() {
 
     SDL_Event e;
     bool RUN = true;
-
     while(RUN) {
 
         while(SDL_PollEvent(&e)) {
@@ -171,7 +185,7 @@ int main() {
         SDL_RenderClear(ren);
 
         // Ghost Movement
-        // moveGhosts(ghosts, walls, numOfWalls, posX/DEF_SIZE, posY/DEF_SIZE, ghostsMove, *gSpawn);
+        moveGhosts(ghosts, walls, numOfWalls, posX/DEF_SIZE, posY/DEF_SIZE, ghostsMove, *gSpawn);
 
         // Draw walls
         for(int i = 0; i < numOfWalls; i++) {
@@ -363,6 +377,7 @@ int main() {
         SDL_FreeSurface(livesTextSurface);
         SDL_DestroyTexture(livesTextTexture);
 
+        // Ghost kill timer ?
         if(canKill == 1) {
 
             if(time > 5*23) {  
@@ -394,7 +409,7 @@ int main() {
     TTF_CloseFont(font);
     TTF_Quit();
 
-    int bestScore = readBestScore();
+    // Write new score
     if(bestScore < CPOINTS) {
 
         writeBestScore(CPOINTS);

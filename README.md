@@ -9,6 +9,11 @@ mkdir build
 cd build
 ```
 
+cmake v: build/:
+```bash
+cmake ..
+```
+
 kompilujte v: build/:
 ```bash
 make

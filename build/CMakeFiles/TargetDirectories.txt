@@ -1,3 +1,0 @@
-/home/haures/Desktop/SDL_Pacman/build/CMakeFiles/main.dir
-/home/haures/Desktop/SDL_Pacman/build/CMakeFiles/edit_cache.dir
-/home/haures/Desktop/SDL_Pacman/build/CMakeFiles/rebuild_cache.dir

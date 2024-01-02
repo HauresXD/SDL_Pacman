@@ -1,1 +1,0 @@
-/usr/bin/cc  -fsanitize=address CMakeFiles/main.dir/main.c.o CMakeFiles/main.dir/sdl_playground.c.o CMakeFiles/main.dir/ghosts.c.o CMakeFiles/main.dir/points.c.o CMakeFiles/main.dir/walls.c.o CMakeFiles/main.dir/files.c.o CMakeFiles/main.dir/screens.c.o -o main  -lSDL2 -lSDL2_image -lSDL2_ttf -lm 
